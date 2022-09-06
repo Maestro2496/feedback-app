@@ -1,5 +1,6 @@
 import Cards from "./cards";
 import Suggestion from "./Suggestion";
+import SuggestionEmpty from "./SuggestionEmpty";
 import SuggestionHeader from "./SuggestionHeader";
 const Suggestions = () => {
   return (
@@ -9,11 +10,12 @@ const Suggestions = () => {
       </section>
       <section className="w-[51.5625rem] h-full flex flex-col space-y-3 ">
         <SuggestionHeader />
+        {/*  <Suggestion />
         <Suggestion />
         <Suggestion />
         <Suggestion />
-        <Suggestion />
-        <Suggestion />
+        <Suggestion /> */}
+        <SuggestionEmpty />
       </section>
     </div>
   );
