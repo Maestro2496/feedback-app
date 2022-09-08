@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import FeedBackDetails from "../components/feedbacks";
+import EditFeedBack from "../components/feedbacks/EditFeedBack";
 import NewFeedBack from "../components/feedbacks/NewFeedBack";
 import Suggestions from "../components/suggestions";
 import styles from "../styles/Home.module.css";
@@ -14,7 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <NewFeedBack />
+      <EditFeedBack />
     </div>
   );
 }
