@@ -1,16 +1,42 @@
 import Image from "next/image";
-import React, {useState} from "react";
+import React, {useState, useMemo} from "react";
 import Suggestion from "../suggestions/Suggestion";
 import clsx from "clsx";
+import {useRouter} from "next/router";
+type Reply = {
+  content: string;
+  replyingTo: string;
+  user: User;
+};
+type User = {
+  image: string;
+  name: string;
+  username: string;
+};
+type Comment = {
+  id: number;
+  content: string;
+  user: User;
+  replies?: Reply[];
+};
+interface FeedBackDetails {
+  id: number;
+  title: string;
+  category: string;
+  upvotes: number;
+  status: string;
+  description: string;
+  comments: Comment[];
+}
 
-const Reply = () => {
+const Reply = ({reply}: {reply: Reply}) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   return (
     <div className={clsx("flex space-x-6 mt-4 p-2 rounded-md")}>
       <div className="flex flex-col items-center space-y-6 ">
         <div className="w-fit h-fit">
           <Image
-            src="/images/image-elijah.jpg"
+            src={reply.user.image}
             layout="fixed"
             height={40}
             width={40}
@@ -22,8 +48,8 @@ const Reply = () => {
       <div className="flex flex-col space-y-4 justify-center items-center">
         <div className="flex justify-between items-center w-full">
           <div>
-            <h2 className="text-slate-blue font-bold">Elijah Moss</h2>
-            <p className="text-medium-grey">@hexagon.pestagon</p>
+            <h2 className="text-slate-blue font-bold">{reply.user.name}</h2>
+            <p className="text-medium-grey">{reply.user.username}</p>
           </div>
           <button
             onClick={() => setShowReplyBox((prev) => !prev)}
@@ -33,10 +59,7 @@ const Reply = () => {
           </button>
         </div>
         <div>
-          <p className="text-medium-grey">
-            Also, please allow styles to be applied based on system preferences. I would love to be
-            able to browse Frontend Mentor in the evening after my device’s dark mode turns on
-          </p>
+          <p className="text-medium-grey">{reply.content}</p>
           <div
             className={clsx(
               "flex justify-between w-full mt-6 transform transition-all duration-300",
@@ -53,14 +76,14 @@ const Reply = () => {
     </div>
   );
 };
-const CommentWithoutReply = () => {
+const CommentWithoutReply = ({comment}: {comment: Comment}) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   return (
     <div className="flex space-x-6  px-2 py-6  border-b border-b-gray-300">
       <div className="flex flex-col items-center space-y-6 ">
         <div className="w-fit h-fit">
           <Image
-            src="/images/image-elijah.jpg"
+            src={comment.user.image}
             layout="fixed"
             height={40}
             width={40}
@@ -69,11 +92,11 @@ const CommentWithoutReply = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col space-y-4 justify-center items-center">
+      <div className="flex flex-col space-y-4 justify-center items-center w-full">
         <div className="flex justify-between items-center w-full">
           <div>
-            <h2 className="text-slate-blue font-bold">Elijah Moss</h2>
-            <p className="text-medium-grey">@hexagon.pestagon</p>
+            <h2 className="text-slate-blue font-bold">{comment.user.name}</h2>
+            <p className="text-medium-grey">{comment.user.username}</p>
           </div>
           <button
             onClick={() => setShowReplyBox((prev) => !prev)}
@@ -82,13 +105,8 @@ const CommentWithoutReply = () => {
             Reply
           </button>
         </div>
-        <div>
-          <p className="text-medium-grey">
-            Also, please allow styles to be applied based on system preferences. I would love to be
-            able to browse Frontend Mentor in the evening after my device’s dark mode turns on
-            without the bright background it currently has. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Amet magnam ipsum officia quo laboriosam aliquid
-          </p>
+        <div className="w-full ">
+          <p className="text-medium-grey">{comment.content}</p>
           <div
             className={clsx(
               "justify-between w-full mt-6 transform transition-all duration-300 ",
@@ -105,14 +123,14 @@ const CommentWithoutReply = () => {
     </div>
   );
 };
-const CommentWithReply = () => {
+const CommentWithReply = ({comment}: {comment: Comment}) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   return (
     <div className="flex space-x-6 mt-4  p-2  ">
       <div className="flex flex-col items-center space-y-6 ">
         <div className="w-fit h-fit">
           <Image
-            src="/images/image-elijah.jpg"
+            src={comment.user.image}
             layout="fixed"
             height={40}
             width={40}
@@ -125,8 +143,8 @@ const CommentWithReply = () => {
       <div className="flex flex-col space-y-4 justify-center items-center">
         <div className="flex justify-between items-center w-full">
           <div>
-            <h2 className="text-slate-blue font-bold">Elijah Moss</h2>
-            <p className="text-medium-grey">@hexagon.pestagon</p>
+            <h2 className="text-slate-blue font-bold">{comment.user.name}</h2>
+            <p className="text-medium-grey">{comment.user.username}</p>
           </div>
           <button
             onClick={() => setShowReplyBox((prev) => !prev)}
@@ -136,12 +154,7 @@ const CommentWithReply = () => {
           </button>
         </div>
         <div>
-          <p className="text-medium-grey">
-            Also, please allow styles to be applied based on system preferences. I would love to be
-            able to browse Frontend Mentor in the evening after my device’s dark mode turns on
-            without the bright background it currently has. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Amet magnam ipsum officia quo laboriosam aliquid
-          </p>
+          <p className="text-medium-grey">{comment.content}</p>
           <div
             className={clsx(
               "flex justify-between w-full mt-6 transform transition-all duration-300",
@@ -153,26 +166,44 @@ const CommentWithReply = () => {
               Post Reply
             </button>
           </div>
-          <Reply />
-          <Reply />
+          <>
+            {comment.replies.map((reply) => (
+              <Reply key={reply.replyingTo} reply={reply} />
+            ))}
+          </>
         </div>
       </div>
     </div>
   );
 };
-const Comments = () => {
+const Comments = ({comments}: {comments: Comment[]}) => {
   return (
     <section className="rounded-md bg-white px-8 py-3">
-      <h1 className="text-slate-blue font-bold text-lg">4 comments</h1>
-      <CommentWithoutReply />
-      <CommentWithReply />
+      <h1 className="text-slate-blue font-bold text-lg">{comments.length} comments</h1>
+      <>
+        {comments.map((comment) => {
+          if (comment.replies) {
+            return <CommentWithReply key={comment.id} comment={comment} />;
+          } else {
+            return <CommentWithoutReply key={comment.id} comment={comment} />;
+          }
+        })}
+      </>
     </section>
   );
 };
 
-export default function FeedBackDetails() {
+export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails}) {
+  const router = useRouter();
+  const infos = useMemo(() => {
+    if (feedBack) return feedBack;
+    return;
+  }, [feedBack]);
+
+  if (!feedBack) return null;
+  const {title, description, comments, upvotes, category, id} = infos;
   return (
-    <div className="max-w-[45.625rem] mx-auto space-y-6">
+    <div className="max-w-[45.625rem] mx-auto space-y-6 my-2">
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center">
           <svg
@@ -185,12 +216,24 @@ export default function FeedBackDetails() {
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
-          <p className="text-medium-grey font-bold">Go back</p>
+          <button
+            className="text-medium-grey font-bold cursor-pointer"
+            onClick={() => router.back()}
+          >
+            Go back
+          </button>
         </div>
         <button className="text-white bg-[#7C91F9] py-2 px-6 rounded-md">Edit feedback</button>
       </div>
-      <Suggestion />
-      <Comments />
+      <Suggestion
+        id={id}
+        comments={comments}
+        title={title}
+        description={description}
+        upvotes={upvotes}
+        category={category}
+      />
+      <Comments comments={comments} />
       <div className="bg-white px-4 py-6 rounded-md flex flex-col space-y-3 items-center justify-center">
         <h2 className="text-left w-full text-slate-blue text-lg font-bold">Add comment</h2>
         <textarea
