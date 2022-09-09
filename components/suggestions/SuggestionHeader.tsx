@@ -1,6 +1,10 @@
 import React from "react";
+import {useAppSelector} from "../../store/hooks";
 
 export default function SuggestionHeader() {
+  const suggestions = useAppSelector((state) =>
+    state.productRequests.filter((productRequest) => productRequest.status === "suggestion")
+  );
   return (
     <div className="bg-[#373F68] h-[4.5rem] rounded-md flex items-center justify-center space-x-7 px-5">
       <svg width="23" height="24" xmlns="http://www.w3.org/2000/svg">
@@ -10,7 +14,9 @@ export default function SuggestionHeader() {
           fillRule="nonzero"
         />
       </svg>
-      <span className="inline-flex font-bold text-white text-lg">2 Suggestions</span>
+      <span className="inline-flex font-bold text-white text-lg">
+        {suggestions.length} Suggestions
+      </span>
       <div className="flex flex-1 space-x-2 items-center text-white text-sm">
         <span className="font-light">Sort by :</span>{" "}
         <span className="font-bold">Most Upvotes</span>{" "}
