@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import {useAppSelector} from "../../store/hooks";
 
@@ -31,7 +32,9 @@ export default function SuggestionHeader() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
         </svg>
       </div>
-      <button className="bg-simple-purple text-white py-2 px-4 rounded-md">+ Add feedback</button>
+      <Link href="/newFeedback">
+        <a className="bg-simple-purple text-white py-2 px-4 rounded-md ">+ Add feedback</a>
+      </Link>
     </div>
   );
 }

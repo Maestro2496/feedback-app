@@ -4,9 +4,10 @@ import SuggestionEmpty from "./SuggestionEmpty";
 import SuggestionHeader from "./SuggestionHeader";
 import data from "../../data.json";
 import {useAppSelector} from "../../store/hooks";
-import {useMemo} from "react";
+import {useMemo, useEffect} from "react";
 
 const Suggestions = () => {
+  useEffect(() => {}, []);
   const productRequests = useAppSelector((state) => state.productRequests);
   const suggestions = useMemo(() => {
     return productRequests.filter((productRequest) => productRequest.status === "suggestion");

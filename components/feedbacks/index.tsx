@@ -1,8 +1,14 @@
 import Image from "next/image";
-import React, {useState, useMemo} from "react";
+import React, {useState, useMemo, useRef, useEffect} from "react";
 import Suggestion from "../suggestions/Suggestion";
 import clsx from "clsx";
 import {useRouter} from "next/router";
+import Link from "next/link";
+import {Formik, Form, Field} from "formik";
+import {useDispatch} from "react-redux";
+import {replyToComment} from "../../store/features/productRequests";
+import data from "../../data.json";
+import {useAppDispatch} from "../../store/hooks";
 type Reply = {
   content: string;
   replyingTo: string;
@@ -29,10 +35,19 @@ interface FeedBackDetails {
   comments: Comment[];
 }
 
-const Reply = ({reply}: {reply: Reply}) => {
+const Reply = ({
+  reply,
+  feedBackId,
+  commentId,
+}: {
+  reply: Reply;
+  feedBackId: number;
+  commentId: number;
+}) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
+  const dispatch = useDispatch();
   return (
-    <div className={clsx("flex space-x-6 mt-4 p-2 rounded-md")}>
+    <div className={clsx("flex space-x-6 mt-4 p-2 rounded-md ")}>
       <div className="flex flex-col items-center space-y-6 ">
         <div className="w-fit h-fit">
           <Image
@@ -45,7 +60,7 @@ const Reply = ({reply}: {reply: Reply}) => {
           />
         </div>
       </div>
-      <div className="flex flex-col space-y-4 justify-center items-center">
+      <div className="flex flex-col space-y-4 justify-center items-center w-[80%]">
         <div className="flex justify-between items-center w-full">
           <div>
             <h2 className="text-slate-blue font-bold">{reply.user.name}</h2>
@@ -58,25 +73,54 @@ const Reply = ({reply}: {reply: Reply}) => {
             Reply
           </button>
         </div>
-        <div>
-          <p className="text-medium-grey">{reply.content}</p>
-          <div
-            className={clsx(
-              "flex justify-between w-full mt-6 transform transition-all duration-300",
-              showReplyBox ? "opacity-1  translate-y-0" : "opacity-0 h-0 -translate-y-[100%]"
-            )}
+        <div className="w-full">
+          <p className="text-medium-grey">
+            <span className="text-simple-purple font-bold">{`@${reply.replyingTo} `}</span>
+            {reply.content}
+          </p>
+          <Formik
+            initialValues={{
+              content: "",
+            }}
+            onSubmit={(values) => {
+              console.log(values);
+              dispatch(
+                replyToComment({
+                  feedBackId,
+                  commentId,
+                  content: values.content,
+                  replyingTo: reply.user.name,
+                  user: data.currentUser,
+                })
+              );
+              setShowReplyBox(false);
+            }}
           >
-            <textarea className="w-[80%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4" />
-            <button className="h-1/2 bg-simple-purple text-white py-2 px-3 rounded-md">
-              Post Reply
-            </button>
-          </div>
+            <Form
+              className={clsx(
+                " justify-between space-x-2 w-full mt-6 transform transition-all duration-300",
+                showReplyBox ? "flex" : "hidden"
+              )}
+            >
+              <Field
+                name="content"
+                component="textarea"
+                className="w-[70%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+              />
+              <button
+                type="submit"
+                className="h-10  bg-simple-purple text-white py-2 px-3 rounded-md"
+              >
+                Post Reply
+              </button>
+            </Form>
+          </Formik>
         </div>
       </div>
     </div>
   );
 };
-const CommentWithoutReply = ({comment}: {comment: Comment}) => {
+const CommentWithoutReply = ({comment, feedBackId}: {comment: Comment; feedBackId: number}) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   return (
     <div className="flex space-x-6  px-2 py-6  border-b border-b-gray-300">
@@ -123,8 +167,11 @@ const CommentWithoutReply = ({comment}: {comment: Comment}) => {
     </div>
   );
 };
-const CommentWithReply = ({comment}: {comment: Comment}) => {
+const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: number}) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
+  const dispatch = useAppDispatch();
+  const [height, setHeight] = useState(0);
+
   return (
     <div className="flex space-x-6 mt-4  p-2  ">
       <div className="flex flex-col items-center space-y-6 ">
@@ -138,7 +185,12 @@ const CommentWithReply = ({comment}: {comment: Comment}) => {
             className="rounded-full"
           />
         </div>
-        <div className=" h-[60%] bg-gray-300 rounded-md  w-[1px]" />
+        <div
+          style={{
+            height,
+          }}
+          className=" bg-gray-300 rounded-md  w-[1px]"
+        />
       </div>
       <div className="flex flex-col space-y-4 justify-center items-center">
         <div className="flex justify-between items-center w-full">
@@ -155,37 +207,72 @@ const CommentWithReply = ({comment}: {comment: Comment}) => {
         </div>
         <div>
           <p className="text-medium-grey">{comment.content}</p>
-          <div
-            className={clsx(
-              "flex justify-between w-full mt-6 transform transition-all duration-300",
-              showReplyBox ? "opacity-1  translate-y-0" : "opacity-0 h-0 -translate-y-[100%]"
-            )}
+          <Formik
+            initialValues={{content: ""}}
+            onSubmit={(values) => {
+              dispatch(
+                replyToComment({
+                  feedBackId,
+                  commentId: comment.id,
+                  content: values.content,
+                  replyingTo: comment.user.name,
+                  user: data.currentUser,
+                })
+              );
+              setShowReplyBox(false);
+            }}
           >
-            <textarea className="w-[80%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4" />
-            <button className="h-1/2 bg-simple-purple text-white py-2 px-3 rounded-md">
-              Post Reply
-            </button>
-          </div>
-          <>
+            <Form
+              className={clsx(
+                "flex justify-between w-full mt-6 transform transition-all duration-300",
+                showReplyBox ? "opacity-1  translate-y-0" : "opacity-0 h-0 -translate-y-[100%]"
+              )}
+            >
+              <Field
+                name="content"
+                component="textarea"
+                className="w-[80%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+              />
+              <button
+                type="submit"
+                className="h-1/2 bg-simple-purple text-white py-2 px-3 rounded-md"
+              >
+                Post Reply
+              </button>
+            </Form>
+          </Formik>
+
+          <div
+            ref={(e) => {
+              if (e) setHeight(e.getBoundingClientRect().height);
+            }}
+          >
             {comment.replies.map((reply) => (
-              <Reply key={reply.replyingTo} reply={reply} />
+              <Reply
+                key={reply.replyingTo}
+                reply={reply}
+                feedBackId={feedBackId}
+                commentId={comment.id}
+              />
             ))}
-          </>
+          </div>
         </div>
       </div>
     </div>
   );
 };
-const Comments = ({comments}: {comments: Comment[]}) => {
+const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: number}) => {
   return (
     <section className="rounded-md bg-white px-8 py-3">
       <h1 className="text-slate-blue font-bold text-lg">{comments.length} comments</h1>
       <>
         {comments.map((comment) => {
           if (comment.replies) {
-            return <CommentWithReply key={comment.id} comment={comment} />;
+            return <CommentWithReply key={comment.id} comment={comment} feedBackId={feedBackId} />;
           } else {
-            return <CommentWithoutReply key={comment.id} comment={comment} />;
+            return (
+              <CommentWithoutReply key={comment.id} comment={comment} feedBackId={feedBackId} />
+            );
           }
         })}
       </>
@@ -223,7 +310,9 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
             Go back
           </button>
         </div>
-        <button className="text-white bg-[#7C91F9] py-2 px-6 rounded-md">Edit feedback</button>
+        <Link href={`/feedback/edit/${id}`}>
+          <a className="text-white bg-[#7C91F9] py-2 px-6 rounded-md">Edit feedback</a>
+        </Link>
       </div>
       <Suggestion
         id={id}
@@ -233,7 +322,7 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
         upvotes={upvotes}
         category={category}
       />
-      <Comments comments={comments} />
+      <Comments comments={comments} feedBackId={id} />
       <div className="bg-white px-4 py-6 rounded-md flex flex-col space-y-3 items-center justify-center">
         <h2 className="text-left w-full text-slate-blue text-lg font-bold">Add comment</h2>
         <textarea
