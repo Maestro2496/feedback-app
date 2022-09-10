@@ -1,8 +1,11 @@
 import {useAppSelector} from "../../../store/hooks";
-
+import {Dispatch, SetStateAction, useState} from "react";
+import {FeedBackDetails} from "../../feedbacks";
+import clsx from "clsx";
+import Link from "next/link";
 const Board = () => {
   return (
-    <div className="bg-[url('/images/background-header.png')] h-[8.5625rem] px-6 pb-6 rounded-md text-white flex justify-start items-end">
+    <div className="bg-[url('/images/background-header.png')] bg-cover  h-[11.125rem] lg:h-[8.5625rem] px-6 pb-6 rounded-md text-white flex justify-start items-end">
       <div>
         <h1 className="font-bold text-[1.25rem]">Frontend Mentor</h1>
         <h2 className="font-light text-[0.9325rem]">Feedback board</h2>
@@ -10,29 +13,40 @@ const Board = () => {
     </div>
   );
 };
-
-const Categories = () => {
+const categories = ["All", "UI", "UX", "Enhancement", "Bug", "Feature"];
+const Categories = ({
+  setFilteredPRequest,
+  filteredRequests,
+}: {
+  setFilteredPRequest: Dispatch<SetStateAction<FeedBackDetails[]>>;
+  filteredRequests: FeedBackDetails[];
+}) => {
+  const productRequests = useAppSelector((state) => state.productRequests);
+  const [current, setCurrent] = useState("All");
   return (
-    <div className="h-[10.375rem] w-full bg-white rounded-md  py-4 px-2 flex items-center justify-center">
+    <div className="h-[11.125rem] w-full bg-white rounded-md  py-4 px-2 flex items-center justify-center">
       <div className="space-x-3 space-y-2 ">
-        <span className="text-[0.825rem] ml-3 inline-block  items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
-          All
-        </span>
-        <span className="text-[0.825rem] inline-block items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
-          UI
-        </span>
-        <span className="text-[0.825rem] inline-block  items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
-          UX
-        </span>
-        <span className="text-[0.825rem] inline-block items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
-          Enhancements
-        </span>
-        <span className="text-[0.825rem] inline-block items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
-          Bug
-        </span>
-        <span className="text-[0.825rem] inline-block items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
-          Feature
-        </span>
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => {
+              setCurrent(category);
+              setFilteredPRequest(() => {
+                const copy = structuredClone(productRequests);
+                if (category === "All") return copy.sort((a, b) => b.upvotes - a.upvotes);
+                return copy
+                  .filter((request) => request.category.toLowerCase() === category.toLowerCase())
+                  .sort((a, b) => b.upvotes - a.upvotes);
+              });
+            }}
+            className={clsx(
+              "text-[0.825rem] ml-3 inline-block  items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold ",
+              current === category ? "bg-blue-700 text-white" : "text-simple-blue"
+            )}
+          >
+            {category}
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -45,13 +59,15 @@ const RoadMap = () => {
   );
   const live = productRequests.filter((productRequest) => productRequest.status === "live");
   return (
-    <div className="h-fit bg-white rounded-md flex py-4 px-3">
+    <div className="h-[11.125rem] lg:h-fit bg-white rounded-md flex py-4 px-3">
       <table className="w-full h-full">
         <thead className="h-12">
           <tr>
             <th className="text-slate-blue font-bold text-lg text-left">Roadmap</th>
             <th className="text-simple-blue font-semibold underline underline-offset-2 text-[0.8125rem]">
-              View
+              <Link href="/roadmap">
+                <a>View</a>
+              </Link>
             </th>
           </tr>
         </thead>
@@ -82,11 +98,17 @@ const RoadMap = () => {
     </div>
   );
 };
-const Cards = () => {
+const Cards = ({
+  setFilteredPRequest,
+  filteredRequests,
+}: {
+  setFilteredPRequest: Dispatch<SetStateAction<FeedBackDetails[]>>;
+  filteredRequests: FeedBackDetails[];
+}) => {
   return (
     <>
       <Board />
-      <Categories />
+      <Categories setFilteredPRequest={setFilteredPRequest} filteredRequests={filteredRequests} />
       <RoadMap />
     </>
   );

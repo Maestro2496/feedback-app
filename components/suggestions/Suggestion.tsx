@@ -21,7 +21,7 @@ import {useAppDispatch} from "../../store/hooks";
 export default function Suggestion({title, description, upvotes, comments, category, id}) {
   const dispatch = useAppDispatch();
   return (
-    <div className="cursor-pointer bg-white w-full flex space-x-10 px-8 py-8 h-[9.4rem] rounded-md shadow-md">
+    <div className="cursor-pointer bg-white w-full flex space-x-10 px-8 py-8 h-fit rounded-md shadow-md">
       <button
         onClick={() => {
           dispatch(

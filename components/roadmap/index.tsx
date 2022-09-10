@@ -48,7 +48,7 @@ function Box({
   return (
     <div
       className={clsx(
-        "w-[21.875rem] h-[17rem] bg-white mt-2 p-6 rounded-md border-t-4",
+        "lg:w-[21.875rem]  lg:h-[17rem] bg-white mt-2 p-6 rounded-md border-t-4",
 
         status === "planned"
           ? " border-t-light-orange"
@@ -59,7 +59,7 @@ function Box({
           : ""
       )}
     >
-      <div className="w-[17.875rem] flex items-center justify-start space-x-4 py-1.5 ">
+      <div className="lg:w-[17.875rem] flex items-center justify-start space-x-4 py-1.5 ">
         <div
           className={clsx(
             "w-2 h-2 rounded-full",
@@ -72,14 +72,14 @@ function Box({
               : ""
           )}
         />
-        <span className="text-medium-grey">{status}</span>
+        <span className="text-medium-grey first-letter:uppercase">{status}</span>
       </div>
-      <h2 className="w-[17.875rem ]text-slate-blue font-bold text-lg">{title}</h2>
-      <h3 className="w-[17.875rem] text-medium-grey mt-1 ">{description}</h3>
+      <h2 className="lg:w-[17.875rem] text-slate-blue font-bold lg:text-lg text-sm">{title}</h2>
+      <h3 className="lg:w-[17.875rem] text-medium-grey mt-1 text-sm lg:text-base">{description}</h3>
       <div className=" mt-3 text-[0.825rem] inline-block items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
         {category}
       </div>
-      <div className="w-[17.875rem] flex justify-between items-center mt-4 ">
+      <div className="lg:w-[17.875rem] flex justify-between items-center mt-4 ">
         <button
           onClick={() => {
             dispatch(upVote({feedBackId: id}));
@@ -131,11 +131,11 @@ export default function Roadmap() {
     return productRequests.filter((productRequest) => productRequest.status === "live");
   }, [productRequests]);
   return (
-    <div className="w-[69.375rem]">
+    <div className=" w-fit px-4">
       <Header />
       <div className="flex space-x-8 mt-12">
         <div className="flex flex-col space-y-2">
-          <h2 className="text-slate-blue font-bold text-lg ">Planned (2)</h2>
+          <h2 className="text-slate-blue font-bold text-lg ">{`Planned (${planned.length})`}</h2>
           <h3 className="text-medium-grey">Ideas prioritized for research</h3>
           <div className="flex flex-col space-y-4 items-center justify-center">
             {planned.map((element) => (
@@ -144,8 +144,8 @@ export default function Roadmap() {
           </div>
         </div>
         <div className="flex flex-col space-y-2">
-          <h2 className="text-slate-blue font-bold text-lg ">Planned (2)</h2>
-          <h3 className="text-medium-grey">Ideas prioritized for research</h3>
+          <h2 className="text-slate-blue font-bold text-lg ">{`In-progress (${inProgress.length})`}</h2>
+          <h3 className="text-medium-grey">Currently being developped</h3>
           <div className="flex flex-col space-y-4 items-center justify-center">
             {inProgress.map((element) => (
               <Box key={element.id} {...element} commmentsLength={element.comments.length} />
@@ -153,8 +153,8 @@ export default function Roadmap() {
           </div>
         </div>
         <div className="flex flex-col space-y-2">
-          <h2 className="text-slate-blue font-bold text-lg ">Planned (2)</h2>
-          <h3 className="text-medium-grey">Ideas prioritized for research</h3>
+          <h2 className="text-slate-blue font-bold text-lg ">{`Live (${live.length})`}</h2>
+          <h3 className="text-medium-grey">Release featured</h3>
           <div className="flex flex-col space-y-4 items-center justify-center">
             {live.map((element) => (
               <Box key={element.id} {...element} commmentsLength={element.comments.length} />
