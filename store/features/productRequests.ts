@@ -67,13 +67,51 @@ const productRequestSlice = createSlice({
       const feedBack = productRequests.find((productRequest) => productRequest.id === feedBackId);
 
       const comment = feedBack.comments.find((comment) => comment.id === commentId);
-      comment.replies.push({
+      if (comment.replies) {
+        comment.replies.push({
+          content,
+          replyingTo,
+          user,
+        });
+      } else {
+        comment.replies = [];
+        comment.replies.push({
+          content,
+          replyingTo,
+          user,
+        });
+      }
+    },
+    addComment: (
+      productRequests,
+      action: PayloadAction<{
+        feedBackId: number;
+        content: string;
+        user: {
+          image: string;
+          name: string;
+          username: string;
+        };
+      }>
+    ) => {
+      const {feedBackId, content, user} = action.payload;
+      const commentLength = productRequests
+        .map((productRequest) => productRequest.comments)
+        .flat().length;
+      const feedBack = productRequests.find((productRequest) => productRequest.id === feedBackId);
+      feedBack.comments.push({
+        id: commentLength + 1,
         content,
-        replyingTo,
         user,
       });
     },
+    upVote: (productRequests, action: PayloadAction<{feedBackId: number}>) => {
+      const {feedBackId} = action.payload;
+      const feedBack = productRequests.find((productRequest) => productRequest.id === feedBackId);
+      feedBack.upvotes++;
+    },
   },
 });
-export const {addFeedBack, editFeedBack, deleteFeedBack, replyToComment} = productRequestSlice.actions;
+export const {addFeedBack, editFeedBack, deleteFeedBack, replyToComment, addComment, upVote} =
+  productRequestSlice.actions;
 export default productRequestSlice.reducer;

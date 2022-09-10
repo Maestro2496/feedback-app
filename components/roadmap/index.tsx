@@ -1,3 +1,7 @@
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
+import React, {useMemo} from "react";
+import clsx from "clsx";
+import {upVote} from "../../store/features/productRequests";
 function Header() {
   return (
     <div className="bg-[#373F68] h-[4.5rem] rounded-md flex items-center justify-between space-x-7 px-5">
@@ -23,24 +27,65 @@ function Header() {
   );
 }
 
-function Box() {
+function Box({
+  status,
+  title,
+  description,
+  upvotes,
+  commmentsLength,
+  category,
+  id,
+}: {
+  status: string;
+  title: string;
+  description: string;
+  upvotes: number;
+  commmentsLength: number;
+  category: string;
+  id: number;
+}) {
+  const dispatch = useAppDispatch();
   return (
-    <div className="w-[21.875rem] h-[17rem] bg-white mt-2 p-6 rounded-md border-t-4 border-t-light-orange">
+    <div
+      className={clsx(
+        "w-[21.875rem] h-[17rem] bg-white mt-2 p-6 rounded-md border-t-4",
+
+        status === "planned"
+          ? " border-t-light-orange"
+          : status === "in-progress"
+          ? " border-t-simple-purple"
+          : status === "live"
+          ? " border-t-sky-blue"
+          : ""
+      )}
+    >
       <div className="w-[17.875rem] flex items-center justify-start space-x-4 py-1.5 ">
-        <div className="w-2 h-2 rounded-full bg-red-300" />
-        <span className="text-medium-grey">Planned</span>
+        <div
+          className={clsx(
+            "w-2 h-2 rounded-full",
+            status === "planned"
+              ? " bg-light-orange"
+              : status === "in-progress"
+              ? " bg-simple-purple"
+              : status === "live"
+              ? " bg-sky-blue"
+              : ""
+          )}
+        />
+        <span className="text-medium-grey">{status}</span>
       </div>
-      <h2 className="w-[17.875rem ]text-slate-blue font-bold text-lg">
-        More comprehensive reports
-      </h2>
-      <h3 className="w-[17.875rem] text-medium-grey mt-1 ">
-        It would be great to see a more detailed breakdown of solutions.
-      </h3>
+      <h2 className="w-[17.875rem ]text-slate-blue font-bold text-lg">{title}</h2>
+      <h3 className="w-[17.875rem] text-medium-grey mt-1 ">{description}</h3>
       <div className=" mt-3 text-[0.825rem] inline-block items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
-        Feature
+        {category}
       </div>
       <div className="w-[17.875rem] flex justify-between items-center mt-4 ">
-        <div className=" rounded-md flex p-2 h-fit justify-between items-center bg-very-light-blue ">
+        <button
+          onClick={() => {
+            dispatch(upVote({feedBackId: id}));
+          }}
+          className=" rounded-md flex p-2 h-fit justify-between items-center bg-very-light-blue "
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -50,8 +95,8 @@ function Box() {
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
           </svg>
-          <span className="inline-flex text-slate-blue font-bold text-sm">112</span>
-        </div>
+          <span className="inline-flex text-slate-blue font-bold text-sm">{upvotes}</span>
+        </button>
         <div className="flex space-x-1 justify-center items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -67,13 +112,24 @@ function Box() {
               d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
             />
           </svg>
-          <span className="inline-flex text-slate-blue font-bold text-sm">2</span>
+          <span className="inline-flex text-slate-blue font-bold text-sm">{commmentsLength}</span>
         </div>
       </div>
     </div>
   );
 }
 export default function Roadmap() {
+  const productRequests = useAppSelector((state) => state.productRequests);
+  const planned = useMemo(() => {
+    return productRequests.filter((productRequest) => productRequest.status === "planned");
+  }, [productRequests]);
+  const inProgress = useMemo(() => {
+    return productRequests.filter((productRequest) => productRequest.status === "in-progress");
+  }, [productRequests]);
+
+  const live = useMemo(() => {
+    return productRequests.filter((productRequest) => productRequest.status === "live");
+  }, [productRequests]);
   return (
     <div className="w-[69.375rem]">
       <Header />
@@ -82,27 +138,27 @@ export default function Roadmap() {
           <h2 className="text-slate-blue font-bold text-lg ">Planned (2)</h2>
           <h3 className="text-medium-grey">Ideas prioritized for research</h3>
           <div className="flex flex-col space-y-4 items-center justify-center">
-            <Box />
-            <Box />
-            <Box />
+            {planned.map((element) => (
+              <Box key={element.id} {...element} commmentsLength={element.comments.length} />
+            ))}
           </div>
         </div>
         <div className="flex flex-col space-y-2">
           <h2 className="text-slate-blue font-bold text-lg ">Planned (2)</h2>
           <h3 className="text-medium-grey">Ideas prioritized for research</h3>
           <div className="flex flex-col space-y-4 items-center justify-center">
-            <Box />
-            <Box />
-            <Box />
+            {inProgress.map((element) => (
+              <Box key={element.id} {...element} commmentsLength={element.comments.length} />
+            ))}
           </div>
         </div>
         <div className="flex flex-col space-y-2">
           <h2 className="text-slate-blue font-bold text-lg ">Planned (2)</h2>
           <h3 className="text-medium-grey">Ideas prioritized for research</h3>
           <div className="flex flex-col space-y-4 items-center justify-center">
-            <Box />
-            <Box />
-            <Box />
+            {live.map((element) => (
+              <Box key={element.id} {...element} commmentsLength={element.comments.length} />
+            ))}
           </div>
         </div>
       </div>

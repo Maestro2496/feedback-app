@@ -6,7 +6,7 @@ import {useRouter} from "next/router";
 import Link from "next/link";
 import {Formik, Form, Field} from "formik";
 import {useDispatch} from "react-redux";
-import {replyToComment} from "../../store/features/productRequests";
+import {addComment, replyToComment} from "../../store/features/productRequests";
 import data from "../../data.json";
 import {useAppDispatch} from "../../store/hooks";
 type Reply = {
@@ -120,10 +120,24 @@ const Reply = ({
     </div>
   );
 };
-const CommentWithoutReply = ({comment, feedBackId}: {comment: Comment; feedBackId: number}) => {
+const CommentWithoutReply = ({
+  comment,
+  feedBackId,
+  lastElement,
+}: {
+  comment: Comment;
+  feedBackId: number;
+  lastElement: boolean;
+}) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
+  const dispatch = useAppDispatch();
   return (
-    <div className="flex space-x-6  px-2 py-6  border-b border-b-gray-300">
+    <div
+      className={clsx(
+        "flex space-x-6  px-2 py-6 w-full",
+        !lastElement && " border-b border-b-gray-300 "
+      )}
+    >
       <div className="flex flex-col items-center space-y-6 ">
         <div className="w-fit h-fit">
           <Image
@@ -151,17 +165,40 @@ const CommentWithoutReply = ({comment, feedBackId}: {comment: Comment; feedBackI
         </div>
         <div className="w-full ">
           <p className="text-medium-grey">{comment.content}</p>
-          <div
-            className={clsx(
-              "justify-between w-full mt-6 transform transition-all duration-300 ",
-              showReplyBox ? "flex" : "hidden"
-            )}
+          <Formik
+            initialValues={{content: ""}}
+            onSubmit={(values) => {
+              dispatch(
+                replyToComment({
+                  feedBackId,
+                  commentId: comment.id,
+                  content: values.content,
+                  replyingTo: comment.user.name,
+                  user: data.currentUser,
+                })
+              );
+              setShowReplyBox(false);
+            }}
           >
-            <textarea className="w-[80%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4" />
-            <button className="h-1/2 bg-simple-purple text-white py-2 px-3 rounded-md">
-              Post Reply
-            </button>
-          </div>
+            <Form
+              className={clsx(
+                "justify-between w-full mt-6 transform transition-all duration-300 ",
+                showReplyBox ? "flex" : "hidden"
+              )}
+            >
+              <Field
+                name="content"
+                component="textarea"
+                className="w-[80%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+              />
+              <button
+                type="submit"
+                className="h-1/2 bg-simple-purple text-white py-2 px-3 rounded-md"
+              >
+                Post Reply
+              </button>
+            </Form>
+          </Formik>
         </div>
       </div>
     </div>
@@ -173,7 +210,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
   const [height, setHeight] = useState(0);
 
   return (
-    <div className="flex space-x-6 mt-4  p-2  ">
+    <div className="flex space-x-6 mt-4  p-2 w-full ">
       <div className="flex flex-col items-center space-y-6 ">
         <div className="w-fit h-fit">
           <Image
@@ -192,7 +229,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
           className=" bg-gray-300 rounded-md  w-[1px]"
         />
       </div>
-      <div className="flex flex-col space-y-4 justify-center items-center">
+      <div className="flex flex-col space-y-4 justify-center items-center w-[90%]">
         <div className="flex justify-between items-center w-full">
           <div>
             <h2 className="text-slate-blue font-bold">{comment.user.name}</h2>
@@ -205,7 +242,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
             Reply
           </button>
         </div>
-        <div>
+        <div className="w-full">
           <p className="text-medium-grey">{comment.content}</p>
           <Formik
             initialValues={{content: ""}}
@@ -246,10 +283,11 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
             ref={(e) => {
               if (e) setHeight(e.getBoundingClientRect().height);
             }}
+            className="w-[112%] "
           >
             {comment.replies.map((reply) => (
               <Reply
-                key={reply.replyingTo}
+                key={`${Math.random() * 100}`}
                 reply={reply}
                 feedBackId={feedBackId}
                 commentId={comment.id}
@@ -266,12 +304,17 @@ const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: numb
     <section className="rounded-md bg-white px-8 py-3">
       <h1 className="text-slate-blue font-bold text-lg">{comments.length} comments</h1>
       <>
-        {comments.map((comment) => {
+        {comments.map((comment, index) => {
           if (comment.replies) {
             return <CommentWithReply key={comment.id} comment={comment} feedBackId={feedBackId} />;
           } else {
             return (
-              <CommentWithoutReply key={comment.id} comment={comment} feedBackId={feedBackId} />
+              <CommentWithoutReply
+                key={comment.id}
+                comment={comment}
+                feedBackId={feedBackId}
+                lastElement={index === comments.length - 1}
+              />
             );
           }
         })}
@@ -282,6 +325,7 @@ const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: numb
 
 export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails}) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const infos = useMemo(() => {
     if (feedBack) return feedBack;
     return;
@@ -323,17 +367,36 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
         category={category}
       />
       <Comments comments={comments} feedBackId={id} />
-      <div className="bg-white px-4 py-6 rounded-md flex flex-col space-y-3 items-center justify-center">
-        <h2 className="text-left w-full text-slate-blue text-lg font-bold">Add comment</h2>
-        <textarea
-          className="w-full h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
-          placeholder="Type your comment here"
-        />
-        <div className="w-full flex justify-between items-center">
-          <p className="text-medium-grey">250 characters left</p>
-          <button className="text-white bg-simple-purple px-4 py-2 rounded-md">Post comment</button>
-        </div>
-      </div>
+      <Formik
+        initialValues={{content: ""}}
+        onSubmit={({content}) => {
+          dispatch(
+            addComment({
+              feedBackId: id,
+              content,
+              user: data.currentUser,
+            })
+          );
+        }}
+      >
+        {() => (
+          <Form className="bg-white px-4 py-6 rounded-md flex flex-col space-y-3 items-center justify-center">
+            <h2 className="text-left w-full text-slate-blue text-lg font-bold">Add comment</h2>
+            <Field
+              name="content"
+              component="textarea"
+              className="w-full h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+              placeholder="Type your comment here"
+            />
+            <div className="w-full flex justify-between items-center">
+              <p className="text-medium-grey">250 characters left</p>
+              <button type="submit" className="text-white bg-simple-purple px-4 py-2 rounded-md">
+                Post comment
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 }
