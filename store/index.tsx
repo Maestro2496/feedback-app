@@ -4,12 +4,15 @@ import {combineReducers} from "@reduxjs/toolkit";
 import {persistReducer} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import productRequestsReducer from "./features/productRequests";
-
+import sideBarReducer from "./features/sidebar";
 const persistConfig = {
   key: "root",
   storage,
 };
-const rootReducer = combineReducers({productRequests: productRequestsReducer});
+const rootReducer = combineReducers({
+  productRequests: productRequestsReducer,
+  sideBar: sideBarReducer,
+});
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

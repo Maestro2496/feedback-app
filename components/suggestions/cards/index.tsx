@@ -5,7 +5,7 @@ import clsx from "clsx";
 import Link from "next/link";
 const Board = () => {
   return (
-    <div className="bg-[url('/images/background-header.png')] bg-cover  h-[11.125rem] lg:h-[8.5625rem] px-6 pb-6 rounded-md text-white flex justify-start items-end">
+    <div className="hidden bg-[url('/images/background-header.png')] bg-cover  h-[11.125rem] lg:h-[8.5625rem] px-6 pb-6 rounded-md text-white md:flex justify-start items-end">
       <div>
         <h1 className="font-bold text-[1.25rem]">Frontend Mentor</h1>
         <h2 className="font-light text-[0.9325rem]">Feedback board</h2>
@@ -40,7 +40,7 @@ const Categories = ({
               });
             }}
             className={clsx(
-              "text-[0.825rem] ml-3 inline-block  items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold ",
+              "text-xs md:text-[0.825rem] ml-3 inline-block  items-center rounded-md bg-very-light-blue px-5 py-2 font-semibold ",
               current === category ? "bg-blue-700 text-white" : "text-simple-blue"
             )}
           >
@@ -51,7 +51,7 @@ const Categories = ({
     </div>
   );
 };
-const RoadMap = () => {
+export const RoadMap = () => {
   const productRequests = useAppSelector((state) => state.productRequests);
   const planned = productRequests.filter((productRequest) => productRequest.status === "planned");
   const inProgress = productRequests.filter(
@@ -98,7 +98,7 @@ const RoadMap = () => {
     </div>
   );
 };
-const Cards = ({
+export const Cards = ({
   setFilteredPRequest,
   filteredRequests,
 }: {

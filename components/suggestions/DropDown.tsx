@@ -38,7 +38,7 @@ export default function UpVoteDropDown({
     });
   }, [selected, setFilteredPRequests]);
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className=" relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex w-full justify-center  text-sm font-medium text-very-light-blue shadow-sm  ">
           {selected}
@@ -55,7 +55,7 @@ export default function UpVoteDropDown({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute top-8 md:right-0  z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="">
             {votes.map((vote) => (
               <Menu.Item key={vote}>
