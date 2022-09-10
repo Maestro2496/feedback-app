@@ -25,7 +25,7 @@ type Comment = {
   user: User;
   replies?: Reply[];
 };
-interface FeedBackDetails {
+export interface FeedBackDetails {
   id: number;
   title: string;
   category: string;

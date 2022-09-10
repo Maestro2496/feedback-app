@@ -1,8 +1,15 @@
+import {Dispatch, SetStateAction} from "react";
 import Link from "next/link";
 import React from "react";
 import {useAppSelector} from "../../store/hooks";
+import UpVoteDropDown from "./DropDown";
+import {FeedBackDetails} from "../feedbacks";
 
-export default function SuggestionHeader() {
+export default function SuggestionHeader({
+  setFilteredPRequests,
+}: {
+  setFilteredPRequests: Dispatch<SetStateAction<FeedBackDetails[]>>;
+}) {
   const suggestions = useAppSelector((state) =>
     state.productRequests.filter((productRequest) => productRequest.status === "suggestion")
   );
@@ -20,17 +27,7 @@ export default function SuggestionHeader() {
       </span>
       <div className="flex flex-1 space-x-2 items-center text-white text-sm">
         <span className="font-light">Sort by :</span>{" "}
-        <span className="font-bold">Most Upvotes</span>{" "}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-8 h-4"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-        </svg>
+        <UpVoteDropDown setFilteredPRequests={setFilteredPRequests} />
       </div>
       <Link href="/newFeedback">
         <a className="bg-simple-purple text-white py-2 px-4 rounded-md ">+ Add feedback</a>
