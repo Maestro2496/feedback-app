@@ -1,11 +1,13 @@
-import {useAppDispatch, useAppSelector} from "../../store/hooks";
-import React, {useMemo} from "react";
 import clsx from "clsx";
-import {upVote} from "../../store/features/productRequests";
-import MobileRoadMap from "./mobile";
+import {request} from "http";
+import React, {useMemo, useState} from "react";
+import {upVote} from "../../../store/features/productRequests";
+import {useAppDispatch, useAppSelector} from "../../../store/hooks";
+import {FeedBackDetails} from "../../feedbacks";
+import Tab from "./Tab";
 function Header() {
   return (
-    <div className="bg-[#373F68] h-[4.5rem] rounded-md flex items-center justify-between space-x-7 px-5">
+    <div className="fixed z-20 inset-0 bg-[#373F68] h-[4.5rem]  flex items-center justify-between space-x-7 px-5">
       <div className="flex flex-col items-start justify-center space-y-2">
         <div className="flex items-start">
           <svg
@@ -27,7 +29,6 @@ function Header() {
     </div>
   );
 }
-
 function Box({
   status,
   title,
@@ -119,7 +120,36 @@ function Box({
     </div>
   );
 }
-export default function Roadmap() {
+const Request = ({requests}: {requests: FeedBackDetails[]}) => {
+  const category = useMemo(() => {
+    return requests[0].status;
+  }, [requests]);
+  const description = useMemo(() => {
+    switch (category.toLowerCase()) {
+      case "planned":
+        return "Ideas prioritized for research";
+      case "in-progress":
+        return "Currently being developed";
+      case "live":
+        return "Released features";
+      default:
+        return "";
+    }
+  }, [category]);
+  return (
+    <div className="flex flex-col space-y-2 px-10 py-4">
+      <h2 className="text-slate-blue font-bold text-lg first-letter:uppercase">{`${category}(${requests.length})`}</h2>
+      <h3 className="text-medium-grey">{description}</h3>
+      <div className="space-y-4 items-center justify-center">
+        {requests.map((element) => (
+          <Box key={element.id} {...element} commmentsLength={element.comments.length} />
+        ))}
+      </div>
+    </div>
+  );
+};
+export default function MobileRoadMap() {
+  const [currentCategory, setCurrentCategory] = useState("planned");
   const productRequests = useAppSelector((state) => state.productRequests);
   const planned = useMemo(() => {
     return productRequests.filter((productRequest) => productRequest.status === "planned");
@@ -132,40 +162,54 @@ export default function Roadmap() {
     return productRequests.filter((productRequest) => productRequest.status === "live");
   }, [productRequests]);
   return (
-    <>
-      <div className="hidden md:block w-fit px-4">
-        <Header />
-        <div className="flex space-x-8 mt-12">
-          <div className="flex flex-col space-y-2">
-            <h2 className="text-slate-blue font-bold text-lg ">{`Planned (${planned.length})`}</h2>
-            <h3 className="text-medium-grey">Ideas prioritized for research</h3>
-            <div className="flex flex-col space-y-4 items-center justify-center">
-              {planned.map((element) => (
-                <Box key={element.id} {...element} commmentsLength={element.comments.length} />
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col space-y-2">
-            <h2 className="text-slate-blue font-bold text-lg ">{`In-progress (${inProgress.length})`}</h2>
-            <h3 className="text-medium-grey">Currently being developped</h3>
-            <div className="flex flex-col space-y-4 items-center justify-center">
-              {inProgress.map((element) => (
-                <Box key={element.id} {...element} commmentsLength={element.comments.length} />
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col space-y-2">
-            <h2 className="text-slate-blue font-bold text-lg ">{`Live (${live.length})`}</h2>
-            <h3 className="text-medium-grey">Release featured</h3>
-            <div className="flex flex-col space-y-4 items-center justify-center">
-              {live.map((element) => (
-                <Box key={element.id} {...element} commmentsLength={element.comments.length} />
-              ))}
-            </div>
-          </div>
+    <div className="md:hidden ">
+      <Header />
+      <div className=" z-10 w-full ">
+        <div className="sticky top-[4.5rem]  border-b border-b-gray-300 bg-very-light-blue w-full">
+          <button
+            onClick={() => {
+              setCurrentCategory("planned");
+            }}
+            className={clsx(
+              "w-1/3 inline-block py-4 border-b-4 ",
+              currentCategory === "planned" && "border-b-light-orange"
+            )}
+          >
+            Planned ({planned.length})
+          </button>
+          <button
+            onClick={() => {
+              setCurrentCategory("in-progress");
+            }}
+            className={clsx(
+              "w-1/3 inline-block py-4 border-b-4 ",
+              currentCategory === "in-progress" && "border-b-simple-purple"
+            )}
+          >
+            In-progress ({inProgress.length})
+          </button>
+          <button
+            onClick={() => {
+              setCurrentCategory("live");
+            }}
+            className={clsx(
+              "w-1/3 inline-block py-4 border-b-4 ",
+              currentCategory === "live" && "border-b-sky-blue"
+            )}
+          >
+            Live ({live.length})
+          </button>
+        </div>
+        <div className="relative top-[3rem] -z-20">
+          {currentCategory === "planned" ? (
+            <Request requests={planned} />
+          ) : currentCategory === "in-progress" ? (
+            <Request requests={inProgress} />
+          ) : currentCategory === "live" ? (
+            <Request requests={live} />
+          ) : null}
         </div>
       </div>
-      <MobileRoadMap />
-    </>
+    </div>
   );
 }

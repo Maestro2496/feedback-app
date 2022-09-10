@@ -25,12 +25,12 @@ export default function SuggestionHeader({
       <span className="hidden md:inline-flex font-bold text-white text-lg">
         {suggestions.length} Suggestions
       </span>
-      <div className="flex  space-x-2 items-center text-white text-xs md:text-sm">
-        <span className="font-light">Sort by :</span>{" "}
+      <div className="flex space-x-1 items-center text-white text-xs md:text-sm">
+        <span className="font-light">Sort by:</span>{" "}
         <UpVoteDropDown setFilteredPRequests={setFilteredPRequests} />
       </div>
       <Link href="/newFeedback">
-        <a className="bg-simple-purple text-white py-2 px-4 rounded-md ">+ Add feedback</a>
+        <a className="bg-simple-purple text-sm md:text-base text-white py-2 px-4 rounded-md ">+ Add feedback</a>
       </Link>
     </div>
   );

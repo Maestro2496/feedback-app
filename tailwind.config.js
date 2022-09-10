@@ -15,9 +15,9 @@ module.exports = {
         "custom-slate": "#4661E6",
       },
     },
-    fontFamily:{
-      jost:['Jost', 'sans-serif']
-    }
+    fontFamily: {
+      jost: ["Jost", "sans-serif"],
+    },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };

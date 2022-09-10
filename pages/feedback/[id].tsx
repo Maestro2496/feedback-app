@@ -10,7 +10,7 @@ export default function FeedBack() {
   );
     //console.log(feedBack)
   return (
-    <div className="flex items-center justify-center py-8">
+    <div className="md:flex md:items-center md:justify-center md:py-8 w-full">
       <FeedBackDetails feedBack={feedBack} />
     </div>
   );

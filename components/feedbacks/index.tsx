@@ -9,6 +9,7 @@ import {useDispatch} from "react-redux";
 import {addComment, replyToComment} from "../../store/features/productRequests";
 import data from "../../data.json";
 import {useAppDispatch} from "../../store/hooks";
+import Mobile from "./Mobile";
 type Reply = {
   content: string;
   replyingTo: string;
@@ -47,24 +48,17 @@ const Reply = ({
   const [showReplyBox, setShowReplyBox] = useState(false);
   const dispatch = useDispatch();
   return (
-    <div className={clsx("flex space-x-6 mt-4 p-2 rounded-md ")}>
+    <div className={clsx("flex w-[89%] md:w-full space-x-2 md:space-x-6 mt-4 p-2 rounded-md ")}>
       <div className="flex flex-col items-center space-y-6 ">
-        <div className="w-fit h-fit">
-          <Image
-            src={reply.user.image}
-            layout="fixed"
-            height={40}
-            width={40}
-            alt=""
-            className="rounded-full"
-          />
+        <div className="relative w-8 h-8">
+          <Image src={reply.user.image} layout="fill" alt="" className="rounded-full " />
         </div>
       </div>
-      <div className="flex flex-col space-y-4 justify-center items-center w-[80%]">
+      <div className="flex flex-col space-y-4 justify-center items-center w-[95%]">
         <div className="flex justify-between items-center w-full">
           <div>
-            <h2 className="text-slate-blue font-bold">{reply.user.name}</h2>
-            <p className="text-medium-grey">{reply.user.username}</p>
+            <h2 className="text-slate-blue font-bold text-xs md:text-base">{reply.user.name}</h2>
+            <p className="text-medium-grey text-xs md:text-base">{reply.user.username}</p>
           </div>
           <button
             onClick={() => setShowReplyBox((prev) => !prev)}
@@ -73,9 +67,10 @@ const Reply = ({
             Reply
           </button>
         </div>
+
         <div className="w-full">
-          <p className="text-medium-grey">
-            <span className="text-simple-purple font-bold">{`@${reply.replyingTo} `}</span>
+          <p className="text-medium-grey text-xs md:text-base w-[90%]">
+            <span className="text-simple-purple font-bold ">{`@${reply.replyingTo} `}</span>
             {reply.content}
           </p>
           <Formik
@@ -83,7 +78,6 @@ const Reply = ({
               content: "",
             }}
             onSubmit={(values) => {
-              console.log(values);
               dispatch(
                 replyToComment({
                   feedBackId,
@@ -98,18 +92,18 @@ const Reply = ({
           >
             <Form
               className={clsx(
-                " justify-between space-x-2 w-full mt-6 transform transition-all duration-300",
+                " justify-between w-full mt-6 transform transition-all duration-300 md:px-2 ",
                 showReplyBox ? "flex" : "hidden"
               )}
             >
               <Field
                 name="content"
                 component="textarea"
-                className="w-[70%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+                className="w-[60%] md:w-[80%] h-[4rem] md:h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
               />
               <button
                 type="submit"
-                className="h-10  bg-simple-purple text-white py-2 px-3 rounded-md"
+                className="h-10 md:h-1/2 bg-simple-purple text-white py-1 px-2 md:py-2 md:px-3 rounded-md md:text-base text-sm"
               >
                 Post Reply
               </button>
@@ -164,7 +158,7 @@ const CommentWithoutReply = ({
           </button>
         </div>
         <div className="w-full ">
-          <p className="text-medium-grey">{comment.content}</p>
+          <p className="text-medium-grey md:text-base text-xs">{comment.content}</p>
           <Formik
             initialValues={{content: ""}}
             onSubmit={(values) => {
@@ -210,17 +204,10 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
   const [height, setHeight] = useState(0);
 
   return (
-    <div className="flex space-x-6 mt-4  p-2 w-full ">
-      <div className="flex flex-col items-center space-y-6 ">
-        <div className="w-fit h-fit">
-          <Image
-            src={comment.user.image}
-            layout="fixed"
-            height={40}
-            width={40}
-            alt=""
-            className="rounded-full"
-          />
+    <div className="flex space-x-2 md:space-x-6 mt-4  md:p-2 w-full  ">
+      <div className="flex flex-col items-center space-y-6  ">
+        <div className="relative w-10 h-10">
+          <Image src={comment.user.image} layout="fill" alt="" className="rounded-full" />
         </div>
         <div
           style={{
@@ -229,8 +216,8 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
           className=" bg-gray-300 rounded-md  w-[1px]"
         />
       </div>
-      <div className="flex flex-col space-y-4 justify-center items-center w-[90%]">
-        <div className="flex justify-between items-center w-full">
+      <div className="flex flex-col space-y-4 justify-center items-center w-[95%]">
+        <div className="flex justify-between items-center w-full pr-4">
           <div>
             <h2 className="text-slate-blue font-bold">{comment.user.name}</h2>
             <p className="text-medium-grey">{comment.user.username}</p>
@@ -243,7 +230,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
           </button>
         </div>
         <div className="w-full">
-          <p className="text-medium-grey">{comment.content}</p>
+          <p className="text-medium-grey text-xs md:text-base ">{comment.content}</p>
           <Formik
             initialValues={{content: ""}}
             onSubmit={(values) => {
@@ -261,18 +248,18 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
           >
             <Form
               className={clsx(
-                "flex justify-between w-full mt-6 transform transition-all duration-300",
-                showReplyBox ? "opacity-1  translate-y-0" : "opacity-0 h-0 -translate-y-[100%]"
+                " justify-between w-full mt-6 transform transition-all duration-300 px-2 md:px-0",
+                showReplyBox ? "flex" : "hidden"
               )}
             >
               <Field
                 name="content"
                 component="textarea"
-                className="w-[80%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+                className="w-[70%] md:w-[80%] h-[4rem] md:h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
               />
               <button
                 type="submit"
-                className="h-1/2 bg-simple-purple text-white py-2 px-3 rounded-md"
+                className="h-1/3 md:h-1/2 bg-simple-purple text-white py-1 px-2 md:py-2 md:px-3 rounded-md md:text-base text-sm"
               >
                 Post Reply
               </button>
@@ -283,7 +270,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
             ref={(e) => {
               if (e) setHeight(e.getBoundingClientRect().height);
             }}
-            className="w-[112%] "
+            className="md:w-[100%] "
           >
             {comment.replies.map((reply) => (
               <Reply
@@ -301,7 +288,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
 };
 const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: number}) => {
   return (
-    <section className="rounded-md bg-white px-8 py-3">
+    <section className="rounded-md bg-white md:px-8 py-3">
       <h1 className="text-slate-blue font-bold text-lg">{comments.length} comments</h1>
       <>
         {comments.map((comment, index) => {
@@ -334,69 +321,73 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
   if (!feedBack) return null;
   const {title, description, comments, upvotes, category, id} = infos;
   return (
-    <div className="max-w-[45.625rem] mx-auto space-y-6 my-2">
-      <div className="flex justify-between items-center w-full">
-        <div className="flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-8 h-4 stroke-simple-blue"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
-          <button
-            className="text-medium-grey font-bold cursor-pointer"
-            onClick={() => router.back()}
-          >
-            Go back
-          </button>
+    <>
+     
+      <div className=" hidden md:block max-w-[45.625rem]  mx-auto space-y-6 my-2 w-[100vw]  ">
+        <div className="flex justify-between items-center w-full">
+          <div className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-8 h-4 stroke-simple-blue"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+            <button
+              className="text-medium-grey font-bold cursor-pointer"
+              onClick={() => router.back()}
+            >
+              Go back
+            </button>
+          </div>
+          <Link href={`/feedback/edit/${id}`}>
+            <a className="text-white bg-[#7C91F9] py-2 px-6 rounded-md">Edit feedback</a>
+          </Link>
         </div>
-        <Link href={`/feedback/edit/${id}`}>
-          <a className="text-white bg-[#7C91F9] py-2 px-6 rounded-md">Edit feedback</a>
-        </Link>
+        <Suggestion
+          id={id}
+          comments={comments}
+          title={title}
+          description={description}
+          upvotes={upvotes}
+          category={category}
+        />
+        <Comments comments={comments} feedBackId={id} />
+        <Formik
+          initialValues={{content: ""}}
+          onSubmit={({content}) => {
+            dispatch(
+              addComment({
+                feedBackId: id,
+                content,
+                user: data.currentUser,
+              })
+            );
+          }}
+        >
+          {() => (
+            <Form className="bg-white px-4 py-6 rounded-md flex flex-col space-y-3 items-center justify-center">
+              <h2 className="text-left w-full text-slate-blue text-lg font-bold">Add comment</h2>
+              <Field
+                name="content"
+                component="textarea"
+                className="w-full h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+                placeholder="Type your comment here"
+              />
+              <div className="w-full flex justify-between items-center">
+                <p className="text-medium-grey">250 characters left</p>
+                <button type="submit" className="text-white bg-simple-purple px-4 py-2 rounded-md">
+                  Post comment
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
-      <Suggestion
-        id={id}
-        comments={comments}
-        title={title}
-        description={description}
-        upvotes={upvotes}
-        category={category}
-      />
-      <Comments comments={comments} feedBackId={id} />
-      <Formik
-        initialValues={{content: ""}}
-        onSubmit={({content}) => {
-          dispatch(
-            addComment({
-              feedBackId: id,
-              content,
-              user: data.currentUser,
-            })
-          );
-        }}
-      >
-        {() => (
-          <Form className="bg-white px-4 py-6 rounded-md flex flex-col space-y-3 items-center justify-center">
-            <h2 className="text-left w-full text-slate-blue text-lg font-bold">Add comment</h2>
-            <Field
-              name="content"
-              component="textarea"
-              className="w-full h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
-              placeholder="Type your comment here"
-            />
-            <div className="w-full flex justify-between items-center">
-              <p className="text-medium-grey">250 characters left</p>
-              <button type="submit" className="text-white bg-simple-purple px-4 py-2 rounded-md">
-                Post comment
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+      <Mobile feedBack={feedBack} />
+    </>
   );
 }

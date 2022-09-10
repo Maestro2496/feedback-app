@@ -132,7 +132,7 @@ export default function NewFeedBack() {
       >
         {({setValues}) => {
           return (
-            <Form className=" max-w-[33.75rem] mx-auto flex flex-col items-center justify-center space-y-8">
+            <Form className="px-4 max-w-[33.75rem] mx-auto flex flex-col items-center justify-center space-y-8">
               <div className="flex justify-start items-center w-full">
                 <div className="flex items-center">
                   <svg
@@ -159,10 +159,10 @@ export default function NewFeedBack() {
                 </div>
               </div>
               <div className="bg-white  flex flex-col justify-center items-start space-y-8 p-8 rounded-md w-full">
-                <div className="w-12 h-12 -mt-[52px] z-10 rounded-full -top-6 bg-[url('/images/background-header.png')] bg-cover flex items-center justify-center">
+                <div className="w-12 h-12 -mt-[52px] z-10 rounded-full -top-6 bg-gradient-to-tl from-[#ED5174] to-[#28A7ED] via-[#A337F6] flex items-center justify-center">
                   <PlusIcon className="fill-white w-10 h-10" />
                 </div>
-                <h1 className="text-slate-blue font-bold text-2xl">Create new feedback</h1>
+                <h1 className="text-slate-blue font-bold md:text-2xl text-lg">Create new feedback</h1>
                 <div className="w-full ">
                   <h2 className="text-slate-blue font-bold text-sm">Feedback Title</h2>
                   <h3 className="text-medium-grey text-sm">Add a short, descriptive headline</h3>
@@ -185,15 +185,18 @@ export default function NewFeedBack() {
                   <Field
                     component="textarea"
                     name="description"
-                    className="bg-very-light-blue w-full h-[6rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="border-none bg-very-light-blue w-full h-[6rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                   />
-                  <div className="w-full flex items-center justify-end space-x-3 mt-3 ">
-                    <button type="button" className="bg-slate-blue text-white py-2 px-4 rounded-md">
+                  <div className="w-full md:space-y-0 space-y-3 flex flex-col-reverse md:flex-row items-center justify-center md:justify-end md:space-x-3 mt-3 ">
+                    <button
+                      type="button"
+                      className="w-full bg-slate-blue text-white py-2 px-4 rounded-md mt-3 md:mt-0"
+                    >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="bg-simple-purple text-white py-2 px-4 rounded-md"
+                      className="bg-simple-purple text-white py-2 px-4 rounded-md w-full "
                     >
                       Add Feedback
                     </button>

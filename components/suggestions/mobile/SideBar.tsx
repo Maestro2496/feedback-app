@@ -48,7 +48,7 @@ export default function MobileSideBar({
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="relative top-[4.5rem] pointer-events-auto w-screen max-w-sm">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-very-light-blue py-6 shadow-xl">
+                  <div className="flex h-full flex-col bg-very-light-blue py-6 shadow-xl">
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       <div className="space-y-4 mx-2">
                         <Cards

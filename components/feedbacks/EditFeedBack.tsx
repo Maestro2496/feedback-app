@@ -131,7 +131,7 @@ export default function EditFeedBack() {
       >
         {({setValues}) => {
           return (
-            <Form className=" max-w-[33.75rem] mx-auto flex flex-col items-center justify-center space-y-8">
+            <Form className="px-4 md:max-w-[33.75rem] mx-auto flex flex-col items-center justify-center space-y-8">
               <div className="flex justify-start items-center w-full">
                 <div className="flex items-center">
                   <svg
@@ -178,7 +178,7 @@ export default function EditFeedBack() {
                     </g>
                   </svg>
                 </div>
-                <h1 className="text-slate-blue font-bold text-2xl">
+                <h1 className="text-slate-blue font-bold text-[18px] md:text-2xl w-full">
                   {` Editing ‘${feedBack.title}’`}
                 </h1>
                 <div className="w-full ">
@@ -217,9 +217,9 @@ export default function EditFeedBack() {
                   <Field
                     name="description"
                     component="textarea"
-                    className="bg-very-light-blue w-full h-[6rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="border-none bg-very-light-blue w-full h-[6rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                   />
-                  <div className="w-full flex items-center justify-between space-x-3 mt-3 ">
+                  <div className="hidden w-full md:flex items-center justify-between space-x-3 mt-3 ">
                     <button
                       type="button"
                       className="bg-[#D73737] text-white py-2 px-4 rounded-md"
@@ -245,6 +245,31 @@ export default function EditFeedBack() {
                         Save changes
                       </button>
                     </div>
+                  </div>
+                  <div className="md:hidden w-full flex flex-col items-center justify-center mt-3 space-y-4">
+                    <button
+                      type="submit"
+                      className="bg-simple-purple text-white py-2 px-4 rounded-md w-full"
+                    >
+                      Save changes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => router.back()}
+                      className="bg-slate-blue text-white py-2 px-4 rounded-md w-full"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="bg-[#D73737] text-white py-2 px-4 rounded-md w-full"
+                      onClick={() => {
+                        dispatch(deleteFeedBack({id: Number(id)}));
+                        router.push("/");
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>

@@ -33,7 +33,7 @@ export default function Suggestion({title, description, upvotes, comments, categ
           <a className="font-bold text-slate-blue">{title}</a>
         </Link>
 
-        <p className="text-medium-grey ">{description}</p>
+        <p className="text-medium-grey text-xs md:text-base ">{description}</p>
         <span className="inline-flex items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-medium text-simple-blue">
           {category}
         </span>
