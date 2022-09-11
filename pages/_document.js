@@ -11,7 +11,7 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body className="font-jost bg-very-light-blue">
+      <body className="font-jost bg-[#F2F2F2]">
         <Main />
         <NextScript />
       </body>
