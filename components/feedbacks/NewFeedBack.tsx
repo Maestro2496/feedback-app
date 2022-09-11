@@ -174,7 +174,6 @@ export default function NewFeedBack() {
                   <h2 className="text-slate-blue font-bold text-sm">Feedback Title</h2>
                   <h3 className="text-medium-grey text-sm">Add a short, descriptive headline</h3>
                   <Field
-                    
                     name="title"
                     className={clsx(
                       "bg-very-light-blue w-full h-[3rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600",
@@ -210,6 +209,7 @@ export default function NewFeedBack() {
                   ) : null}
                   <div className="w-full md:space-y-0 space-y-3 flex flex-col-reverse md:flex-row items-center justify-center md:justify-end md:space-x-3 mt-3 ">
                     <button
+                      onClick={() => router.back()}
                       type="button"
                       className="w-full bg-slate-blue hover:bg-blue-900 text-white py-2 px-4 rounded-md mt-3 md:mt-0"
                     >
