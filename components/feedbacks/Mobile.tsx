@@ -104,7 +104,7 @@ const Reply = ({
                   name="content"
                   component="textarea"
                   className={clsx(
-                    "w-full h-16 bg-very-light-blue rounded-md focus:outline-none p-4",
+                    "w-full h-16 bg-very-light-blue rounded-md focus:outline-none p-4 text-[13px]",
                     touched.content && errors.content ? "border border-red-500" : "border-none"
                   )}
                 />
@@ -116,7 +116,7 @@ const Reply = ({
               <div>
                 <button
                   type="submit"
-                  className=" bg-simple-purple text-white py-1 px-2   rounded-md  text-sm"
+                  className=" bg-simple-purple text-white py-1 px-2   rounded-md  text-[13px]"
                 >
                   Post Reply
                 </button>
@@ -193,7 +193,7 @@ const CommentWithoutReply = ({
                     name="content"
                     component="textarea"
                     className={clsx(
-                      "w-full h-16 bg-very-light-blue rounded-md focus:outline-none p-4",
+                      "w-full h-16 bg-very-light-blue rounded-md focus:outline-none p-4 text-[13px]",
                       touched.content && errors.content ? "border border-red-500" : "border-none"
                     )}
                   />
@@ -205,7 +205,7 @@ const CommentWithoutReply = ({
                 <div>
                   <button
                     type="submit"
-                    className=" bg-simple-purple text-white py-1 px-2   rounded-md  text-sm"
+                    className=" bg-simple-purple text-white py-1 px-2   rounded-md  text-[13px]"
                   >
                     Post Reply
                   </button>
@@ -276,7 +276,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
                     name="content"
                     component="textarea"
                     className={clsx(
-                      "w-full h-16 bg-very-light-blue rounded-md focus:outline-none p-4",
+                      "w-full h-16 bg-very-light-blue rounded-md focus:outline-none p-4 text-[13px]",
                       touched.content && errors.content ? "border border-red-500" : "border-none"
                     )}
                   />
@@ -288,7 +288,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
                 <div>
                   <button
                     type="submit"
-                    className=" bg-simple-purple text-white py-1 px-2   rounded-md  text-sm"
+                    className=" bg-simple-purple text-white py-1 px-2   rounded-md  text-[13px]"
                   >
                     Post Reply
                   </button>
@@ -429,7 +429,7 @@ export default function Mobile({feedBack}: {feedBack: FeedBackDetails}) {
               name="content"
               component="textarea"
               className={clsx(
-                "w-full h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4  placeholder:text-[13px]",
+                "w-full h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4  placeholder:text-[13px] text-[13px]",
                 touched.content && errors.content ? "border border-red-500" : "border-none"
               )}
               placeholder="Type your comment here"
