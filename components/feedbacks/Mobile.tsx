@@ -94,9 +94,12 @@ const Reply = ({
         >
           {({touched, errors}) => (
             <Form
-              className={clsx("justify-between w-full mt-4 ", showReplyBox ? "flex" : "hidden")}
+              className={clsx(
+                "justify-center items-start w-full mt-4 ",
+                showReplyBox ? "flex flex-col" : "hidden"
+              )}
             >
-              <div className="w-[67%]">
+              <div className="w-full">
                 <Field
                   name="content"
                   component="textarea"
@@ -113,7 +116,7 @@ const Reply = ({
               <div>
                 <button
                   type="submit"
-                  className="h-8 bg-simple-purple text-white py-1 px-1   rounded-md  text-sm"
+                  className=" bg-simple-purple text-white py-1 px-2   rounded-md  text-sm"
                 >
                   Post Reply
                 </button>
@@ -181,16 +184,16 @@ const CommentWithoutReply = ({
             {({touched, errors}) => (
               <Form
                 className={clsx(
-                  "justify-between w-full mt-4 transform transition-all duration-300 ",
-                  showReplyBox ? "flex" : "hidden"
+                  "justify-between space-y-2 w-full mt-4 transform transition-all duration-300 ",
+                  showReplyBox ? "flex flex-col " : "hidden"
                 )}
               >
-                <div>
+                <div className="">
                   <Field
                     name="content"
                     component="textarea"
                     className={clsx(
-                      "h-16 bg-very-light-blue rounded-md focus:outline-none p-4",
+                      "w-full h-16 bg-very-light-blue rounded-md focus:outline-none p-4",
                       touched.content && errors.content ? "border border-red-500" : "border-none"
                     )}
                   />
@@ -264,16 +267,16 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
             {({touched, errors}) => (
               <Form
                 className={clsx(
-                  "justify-between w-full mt-4 transform transition-all duration-300 ",
-                  showReplyBox ? "flex" : "hidden"
+                  "justify-center items-start w-full mt-4 transform transition-all duration-300 ",
+                  showReplyBox ? "flex flex-col space-y-2" : "hidden"
                 )}
               >
-                <div>
+                <div className="w-full ">
                   <Field
                     name="content"
                     component="textarea"
                     className={clsx(
-                      "h-16 bg-very-light-blue rounded-md focus:outline-none p-4",
+                      "w-full h-16 bg-very-light-blue rounded-md focus:outline-none p-4",
                       touched.content && errors.content ? "border border-red-500" : "border-none"
                     )}
                   />
