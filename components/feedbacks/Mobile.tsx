@@ -406,13 +406,13 @@ export default function Mobile({feedBack}: {feedBack: FeedBackDetails}) {
         upvotes={upvotes}
         category={category}
       />
-      <Comments comments={comments} feedBackId={id} />
+      {comments.length > 0 && <Comments comments={comments} feedBackId={id} />}
       <Formik
         initialValues={{content: ""}}
         validationSchema={object({
           content: string().required("Can't be empty"),
         })}
-        onSubmit={({content}) => {
+        onSubmit={({content}, formik) => {
           dispatch(
             addComment({
               feedBackId: id,
@@ -420,9 +420,10 @@ export default function Mobile({feedBack}: {feedBack: FeedBackDetails}) {
               user: data.currentUser,
             })
           );
+          formik.resetForm();
         }}
       >
-        {({touched, errors}) => (
+        {({touched, errors, values}) => (
           <Form className="bg-white px-4 py-6 rounded-md flex flex-col space-y-3 items-center justify-center">
             <h2 className="text-left w-full text-slate-blue text-lg font-bold">Add comment</h2>
             <Field
@@ -433,12 +434,15 @@ export default function Mobile({feedBack}: {feedBack: FeedBackDetails}) {
                 touched.content && errors.content ? "border border-red-500" : "border-none"
               )}
               placeholder="Type your comment here"
+              maxLength="250"
             />
             {touched.content && errors.content ? (
               <div className="w-full text-left text-xs text-red-500">{errors.content}</div>
             ) : null}
             <div className="w-full flex justify-between items-center">
-              <p className="text-medium-grey text-[13px]">250 characters left</p>
+              <p className="text-medium-grey text-[13px]">{`${
+                250 - values.content.length
+              } characters left`}</p>
               <button
                 type="submit"
                 className="text-white text-[13px] font-bold bg-simple-purple px-4 py-2 rounded-md"

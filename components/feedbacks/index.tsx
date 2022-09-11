@@ -54,7 +54,6 @@ const Reply = ({
         <div className="relative w-8 h-8">
           <Image src={reply.user.image} layout="fill" alt="" className="rounded-full " />
         </div>
-       
       </div>
       <div className="flex flex-col space-y-4 justify-center items-center w-[95%]">
         <div className="flex justify-between items-center w-full">
@@ -399,7 +398,7 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
           validationSchema={object({
             content: string().required("Can't be empty"),
           })}
-          onSubmit={({content}) => {
+          onSubmit={({content}, formik) => {
             dispatch(
               addComment({
                 feedBackId: id,
@@ -407,6 +406,7 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
                 user: data.currentUser,
               })
             );
+            formik.resetForm();
           }}
         >
           {({values, touched, errors}) => (
