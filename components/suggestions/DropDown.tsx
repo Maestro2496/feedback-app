@@ -17,7 +17,7 @@ export default function UpVoteDropDown({
   const [selected, setSelected] = useState(votes[0]);
   useEffect(() => {
     setFilteredPRequests((productRequests) => {
-      const copy = structuredClone(productRequests);
+      const copy = [...productRequests];
       switch (selected) {
         case "Most Upvotes": {
           return copy.sort((a, b) => b.upvotes - a.upvotes);

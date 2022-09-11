@@ -32,7 +32,7 @@ const Categories = ({
             onClick={() => {
               setCurrent(category);
               setFilteredPRequest(() => {
-                const copy = structuredClone(productRequests);
+                const copy = [...productRequests];
                 if (category === "All") return copy.sort((a, b) => b.upvotes - a.upvotes);
                 return copy
                   .filter((request) => request.category.toLowerCase() === category.toLowerCase())
