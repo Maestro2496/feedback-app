@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 export default function SuggestionEmpty() {
@@ -73,7 +74,9 @@ export default function SuggestionEmpty() {
         <p>Got a suggestion? Found a bug that needs to be squashed?</p>
         <p>We love hearing about new ideas to improve our app.</p>
       </div>
-      <button className="bg-simple-purple text-white py-2 px-4 rounded-md">+ Add feedback</button>
+      <Link href="/newFeedback">
+        <a className="bg-simple-purple text-white py-2 px-4 rounded-md">+ Add feedback</a>
+      </Link>
     </div>
   );
 }

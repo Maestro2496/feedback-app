@@ -6,6 +6,7 @@ import {useRouter} from "next/router";
 import Link from "next/link";
 import {Formik, Form, Field} from "formik";
 import {useDispatch} from "react-redux";
+import {object, string} from "yup";
 import {addComment, replyToComment} from "../../store/features/productRequests";
 import data from "../../data.json";
 import {useAppDispatch} from "../../store/hooks";
@@ -77,6 +78,9 @@ const Reply = ({
             initialValues={{
               content: "",
             }}
+            validationSchema={object({
+              content: string().required("Can't be empty"),
+            })}
             onSubmit={(values) => {
               dispatch(
                 replyToComment({
@@ -90,24 +94,29 @@ const Reply = ({
               setShowReplyBox(false);
             }}
           >
-            <Form
-              className={clsx(
-                " justify-between w-full mt-6 transform transition-all duration-300 md:px-2 ",
-                showReplyBox ? "flex" : "hidden"
-              )}
-            >
-              <Field
-                name="content"
-                component="textarea"
-                className="w-[60%] md:w-[80%] h-[4rem] md:h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
-              />
-              <button
-                type="submit"
-                className="h-10 md:h-1/2 bg-simple-purple text-white py-1 px-2 md:py-2 md:px-3 rounded-md md:text-base text-sm"
+            {({touched, errors}) => (
+              <Form
+                className={clsx(
+                  " justify-between w-full mt-6 transform transition-all duration-300 md:px-2 ",
+                  showReplyBox ? "flex" : "hidden"
+                )}
               >
-                Post Reply
-              </button>
-            </Form>
+                <Field
+                  name="content"
+                  component="textarea"
+                  className="w-[60%] md:w-[80%] h-[4rem] md:h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+                />
+                {touched.content && errors.content ? (
+                  <div className="text-red-500 text-xs">{errors.content}</div>
+                ) : null}
+                <button
+                  type="submit"
+                  className="h-10 md:h-1/2 bg-simple-purple text-white py-1 px-2 md:py-2 md:px-3 rounded-md md:text-base text-sm"
+                >
+                  Post Reply
+                </button>
+              </Form>
+            )}
           </Formik>
         </div>
       </div>
@@ -161,6 +170,9 @@ const CommentWithoutReply = ({
           <p className="text-medium-grey md:text-base text-xs">{comment.content}</p>
           <Formik
             initialValues={{content: ""}}
+            validationSchema={object({
+              content: string().required("Can't be empty"),
+            })}
             onSubmit={(values) => {
               dispatch(
                 replyToComment({
@@ -174,24 +186,37 @@ const CommentWithoutReply = ({
               setShowReplyBox(false);
             }}
           >
-            <Form
-              className={clsx(
-                "justify-between w-full mt-6 transform transition-all duration-300 ",
-                showReplyBox ? "flex" : "hidden"
-              )}
-            >
-              <Field
-                name="content"
-                component="textarea"
-                className="w-[80%] h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
-              />
-              <button
-                type="submit"
-                className="h-1/2 bg-simple-purple text-white py-2 px-3 rounded-md"
+            {({touched, errors}) => (
+              <Form
+                className={clsx(
+                  "justify-between w-full mt-6 transform transition-all duration-300 ",
+                  showReplyBox ? "flex" : "hidden"
+                )}
               >
-                Post Reply
-              </button>
-            </Form>
+                <div className="w-[80%]">
+                  <Field
+                    name="content"
+                    component="textarea"
+                    className={clsx(
+                      " w-full h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4 ",
+                      touched.content && errors.content
+                        ? "animate-pulse border border-red-500 "
+                        : "border-none "
+                    )}
+                  />
+                  {touched.content && errors.content ? (
+                    <div className="text-red-500 text-xs animate-pulse">{errors.content}</div>
+                  ) : null}
+                </div>
+
+                <button
+                  type="submit"
+                  className="h-1/2 bg-simple-purple text-white py-2 px-3 rounded-md"
+                >
+                  Post Reply
+                </button>
+              </Form>
+            )}
           </Formik>
         </div>
       </div>
@@ -233,6 +258,9 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
           <p className="text-medium-grey text-xs md:text-base ">{comment.content}</p>
           <Formik
             initialValues={{content: ""}}
+            validationSchema={object({
+              content: string().required("Can't be empty"),
+            })}
             onSubmit={(values) => {
               dispatch(
                 replyToComment({
@@ -246,24 +274,29 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
               setShowReplyBox(false);
             }}
           >
-            <Form
-              className={clsx(
-                " justify-between w-full mt-6 transform transition-all duration-300 px-2 md:px-0",
-                showReplyBox ? "flex" : "hidden"
-              )}
-            >
-              <Field
-                name="content"
-                component="textarea"
-                className="w-[70%] md:w-[80%] h-[4rem] md:h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
-              />
-              <button
-                type="submit"
-                className="h-1/3 md:h-1/2 bg-simple-purple text-white py-1 px-2 md:py-2 md:px-3 rounded-md md:text-base text-sm"
+            {({touched, errors}) => (
+              <Form
+                className={clsx(
+                  " justify-between w-full mt-6 transform transition-all duration-300 px-2 md:px-0",
+                  showReplyBox ? "flex" : "hidden"
+                )}
               >
-                Post Reply
-              </button>
-            </Form>
+                <Field
+                  name="content"
+                  component="textarea"
+                  className="w-[70%] md:w-[80%] h-[4rem] md:h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+                />
+                {touched.content && errors.content ? (
+                  <div className="text-red-500 text-xs">{errors.content}</div>
+                ) : null}
+                <button
+                  type="submit"
+                  className="h-1/3 md:h-1/2 bg-simple-purple text-white py-1 px-2 md:py-2 md:px-3 rounded-md md:text-base text-sm"
+                >
+                  Post Reply
+                </button>
+              </Form>
+            )}
           </Formik>
 
           <div
@@ -289,7 +322,10 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
 const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: number}) => {
   return (
     <section className="rounded-md bg-white md:px-8 py-3">
-      <h1 className="text-slate-blue font-bold text-lg">{comments.length} comments</h1>
+      <h1 className="text-slate-blue font-bold text-lg">
+        {comments.length} comment
+        <span className={clsx(comments.length > 1 ? "inline-block" : "hidden")}>s</span>
+      </h1>
       <>
         {comments.map((comment, index) => {
           if (comment.replies) {
@@ -322,7 +358,6 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
   const {title, description, comments, upvotes, category, id} = infos;
   return (
     <>
-     
       <div className=" hidden md:block max-w-[45.625rem]  mx-auto space-y-6 my-2 w-[100vw]  ">
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center">
@@ -344,7 +379,9 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
             </button>
           </div>
           <Link href={`/feedback/edit/${id}`}>
-            <a className="text-white bg-[#7C91F9] py-2 px-6 rounded-md">Edit feedback</a>
+            <a className="text-white bg-[#7C91F9] py-2 px-6 rounded-md hover:bg-blue-600">
+              Edit feedback
+            </a>
           </Link>
         </div>
         <Suggestion
@@ -355,9 +392,12 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
           upvotes={upvotes}
           category={category}
         />
-        <Comments comments={comments} feedBackId={id} />
+        {comments.length > 0 && <Comments comments={comments} feedBackId={id} />}
         <Formik
           initialValues={{content: ""}}
+          validationSchema={object({
+            content: string().required("Can't be empty"),
+          })}
           onSubmit={({content}) => {
             dispatch(
               addComment({
@@ -368,17 +408,26 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
             );
           }}
         >
-          {() => (
+          {({values, touched, errors}) => (
             <Form className="bg-white px-4 py-6 rounded-md flex flex-col space-y-3 items-center justify-center">
               <h2 className="text-left w-full text-slate-blue text-lg font-bold">Add comment</h2>
               <Field
                 name="content"
                 component="textarea"
-                className="w-full h-[5rem] bg-very-light-blue rounded-md focus:outline-none p-4"
+                className={clsx(
+                  "w-full bg-very-light-blue rounded-md focus:outline-none p-4 ",
+                  touched.content && errors.content ? "border border-red-500" : "border-none"
+                )}
                 placeholder="Type your comment here"
+                maxLength="250"
               />
+              {touched.content && errors.content ? (
+                <div className="w-full text-left text-red-500 text-xs">{errors.content}</div>
+              ) : null}
               <div className="w-full flex justify-between items-center">
-                <p className="text-medium-grey">250 characters left</p>
+                <p className="text-medium-grey">{`${
+                  250 - values.content.length
+                } characters left`}</p>
                 <button type="submit" className="text-white bg-simple-purple px-4 py-2 rounded-md">
                   Post comment
                 </button>

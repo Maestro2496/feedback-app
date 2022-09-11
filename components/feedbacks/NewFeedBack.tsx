@@ -4,6 +4,7 @@ import {Fragment, useState} from "react";
 import {Listbox, Transition} from "@headlessui/react";
 import {CheckIcon, ChevronDownIcon, ChevronUpIcon, PlusIcon} from "@heroicons/react/20/solid";
 import {Formik, Form, Field} from "formik";
+import {object, string} from "yup";
 import clsx from "clsx";
 import {useAppDispatch} from "../../store/hooks";
 import {addFeedBack} from "../../store/features/productRequests";
@@ -119,6 +120,10 @@ export default function NewFeedBack() {
       <SuccessFeedBack open={openModal} setOpen={setOpenModal} />
       <Formik
         initialValues={initialValues}
+        validationSchema={object({
+          title: string().required("Can't be empty"),
+          description: string().required("Can't be empty"),
+        })}
         onSubmit={({title, category, description}) => {
           dispatch(
             addFeedBack({
@@ -130,7 +135,7 @@ export default function NewFeedBack() {
           setOpenModal(true);
         }}
       >
-        {({setValues}) => {
+        {({setValues, touched, errors}) => {
           return (
             <Form className="px-4 max-w-[33.75rem] mx-auto flex flex-col items-center justify-center space-y-8">
               <div className="flex justify-start items-center w-full">
@@ -162,15 +167,23 @@ export default function NewFeedBack() {
                 <div className="w-12 h-12 -mt-[52px] z-10 rounded-full -top-6 bg-gradient-to-tl from-[#ED5174] to-[#28A7ED] via-[#A337F6] flex items-center justify-center">
                   <PlusIcon className="fill-white w-10 h-10" />
                 </div>
-                <h1 className="text-slate-blue font-bold md:text-2xl text-lg">Create new feedback</h1>
+                <h1 className="text-slate-blue font-bold md:text-2xl text-lg">
+                  Create new feedback
+                </h1>
                 <div className="w-full ">
                   <h2 className="text-slate-blue font-bold text-sm">Feedback Title</h2>
                   <h3 className="text-medium-grey text-sm">Add a short, descriptive headline</h3>
                   <Field
+                    
                     name="title"
-                    placeholder="Feedback title"
-                    className="bg-very-light-blue w-full h-[3rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className={clsx(
+                      "bg-very-light-blue w-full h-[3rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600",
+                      touched.title && errors.title ? "border border-red-500 animate-pulse" : ""
+                    )}
                   />
+                  {touched.title && errors.title ? (
+                    <div className="text-xs text-red-500 animate-pulse">{errors.title}</div>
+                  ) : null}
                 </div>
                 <div className="w-full ">
                   <h2 className="text-slate-blue font-bold text-sm">Category</h2>
@@ -185,18 +198,26 @@ export default function NewFeedBack() {
                   <Field
                     component="textarea"
                     name="description"
-                    className="border-none bg-very-light-blue w-full h-[6rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className={clsx(
+                      " bg-very-light-blue w-full h-[6rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 ",
+                      touched.description && errors.description
+                        ? "border border-red-500 animate-pulse focus:ring-red-500"
+                        : "focus:ring-indigo-600 border-none"
+                    )}
                   />
+                  {touched.description && errors.description ? (
+                    <div className="text-sm text-red-500 animate-pulse">{errors.description}</div>
+                  ) : null}
                   <div className="w-full md:space-y-0 space-y-3 flex flex-col-reverse md:flex-row items-center justify-center md:justify-end md:space-x-3 mt-3 ">
                     <button
                       type="button"
-                      className="w-full bg-slate-blue text-white py-2 px-4 rounded-md mt-3 md:mt-0"
+                      className="w-full bg-slate-blue hover:bg-blue-900 text-white py-2 px-4 rounded-md mt-3 md:mt-0"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="bg-simple-purple text-white py-2 px-4 rounded-md w-full "
+                      className="bg-simple-purple hover:bg-purple-900 text-white py-2 px-4 rounded-md w-full "
                     >
                       Add Feedback
                     </button>

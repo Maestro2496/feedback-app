@@ -6,7 +6,7 @@ import {useAppDispatch} from "../../store/hooks";
 export default function Suggestion({title, description, upvotes, comments, category, id}) {
   const dispatch = useAppDispatch();
   return (
-    <div className="cursor-pointer bg-white w-full flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-x-10 p-4 md:p-8  h-fit rounded-md shadow-md">
+    <div className="cursor-pointer  bg-white w-full flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-x-10 p-4 md:p-8  h-fit rounded-md shadow-md">
       <button
         onClick={() => {
           dispatch(
@@ -15,22 +15,22 @@ export default function Suggestion({title, description, upvotes, comments, categ
             })
           );
         }}
-        className="hidden h-1/2 rounded-md md:flex flex-col space-y-1 justify-start items-center bg-very-light-blue "
+        className="hover:bg-blue-500 hover:text-white text-slate-blue stroke-simple-blue hover:stroke-white  hidden h-1/2 rounded-md md:flex flex-col space-y-1 justify-start items-center bg-very-light-blue "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          className="w-8 h-4 stroke-simple-blue"
+          className="w-8 h-4 "
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
         </svg>
-        <span className="inline-flex text-slate-blue font-bold text-sm">{upvotes}</span>
+        <span className="inline-flex font-bold text-sm ">{upvotes}</span>
       </button>
       <div className="space-y-2 flex-1">
         <Link href={`/feedback/${id}`}>
-          <a className="font-bold text-slate-blue">{title}</a>
+          <a className="font-bold text-slate-blue hover:text-blue-500 hover:underline ">{title}</a>
         </Link>
 
         <p className="text-medium-grey text-xs md:text-base ">{description}</p>

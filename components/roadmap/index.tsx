@@ -3,11 +3,14 @@ import React, {useMemo} from "react";
 import clsx from "clsx";
 import {upVote} from "../../store/features/productRequests";
 import MobileRoadMap from "./mobile";
+import Link from "next/link";
+import {useRouter} from "next/router";
 function Header() {
+  const router = useRouter();
   return (
     <div className="bg-[#373F68] h-[4.5rem] rounded-md flex items-center justify-between space-x-7 px-5">
       <div className="flex flex-col items-start justify-center space-y-2">
-        <div className="flex items-start">
+        <button onClick={() => router.back()} className="flex items-start">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -19,11 +22,14 @@ function Header() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
           <p className="text-white text-xs font-bold">Go back</p>
-        </div>
+        </button>
         <h1 className="text-white text-lg font-bold">Roadmap</h1>
       </div>
-
-      <button className="bg-simple-purple text-white py-2 px-4 rounded-md">+ Add Feedback</button>
+      <Link href="/newFeedback">
+        <a className="bg-simple-purple hover:bg-purple-800 text-white py-2 px-4 rounded-md">
+          + Add Feedback
+        </a>
+      </Link>
     </div>
   );
 }
@@ -75,7 +81,12 @@ function Box({
         />
         <span className="text-medium-grey first-letter:uppercase">{status}</span>
       </div>
-      <h2 className="lg:w-[17.875rem] text-slate-blue font-bold lg:text-lg text-sm">{title}</h2>
+      <Link href={`/feedback/${id}`}>
+        <a className="lg:w-[17.875rem] text-slate-blue font-bold lg:text-lg text-sm hover:underline hover:text-blue-700">
+          {title}
+        </a>
+      </Link>
+
       <h3 className="lg:w-[17.875rem] text-medium-grey mt-1 text-sm lg:text-base">{description}</h3>
       <div className=" mt-3 text-[0.825rem] inline-block items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
         {category}
@@ -85,18 +96,18 @@ function Box({
           onClick={() => {
             dispatch(upVote({feedBackId: id}));
           }}
-          className=" rounded-md flex p-2 h-fit justify-between items-center bg-very-light-blue "
+          className=" stroke-simple-blue hover:stroke-white text-slate-blue hover:text-white rounded-md flex p-2 h-fit justify-between items-center bg-very-light-blue hover:bg-blue-600 "
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={3}
-            className="w-6 h-3 stroke-simple-blue "
+            className="w-6 h-3 "
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
           </svg>
-          <span className="inline-flex text-slate-blue font-bold text-sm">{upvotes}</span>
+          <span className="inline-flex font-bold text-sm">{upvotes}</span>
         </button>
         <div className="flex space-x-1 justify-center items-center">
           <svg

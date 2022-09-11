@@ -2,7 +2,8 @@ import React, {useEffect} from "react";
 /* This example requires Tailwind CSS v2.0+ */
 import {Fragment, useState} from "react";
 import {Listbox, Transition} from "@headlessui/react";
-import {CheckIcon, ChevronUpDownIcon, PlusIcon} from "@heroicons/react/20/solid";
+import {object, string} from "yup";
+import {CheckIcon, ChevronUpIcon, ChevronDownIcon, PlusIcon} from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import {Formik, Form, Field} from "formik";
 import {useAppDispatch, useAppSelector} from "../../store/hooks";
@@ -48,7 +49,11 @@ function CustomSelect({
             <Listbox.Button className="h-[3rem] relative w-full cursor-default rounded-md border border-gray-300 bg-very-light-blue py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               <span className="block truncate">{selected}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                {open ? (
+                  <ChevronUpIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                ) : (
+                  <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                )}
               </span>
             </Listbox.Button>
 
@@ -124,16 +129,19 @@ export default function EditFeedBack() {
           category: feedBack.category,
           status: feedBack.status,
         }}
+        validationSchema={object({
+          title: string().required("Can't be empty"),
+        })}
         onSubmit={({title, description, category, status}) => {
           dispatch(editFeedBack({id: Number(id), title, description, category, status}));
           setOpenModal(true);
         }}
       >
-        {({setValues}) => {
+        {({setValues, touched, errors}) => {
           return (
             <Form className="px-4 md:max-w-[33.75rem] mx-auto flex flex-col items-center justify-center space-y-8">
               <div className="flex justify-start items-center w-full">
-                <div className="flex items-center">
+                <button type="button" onClick={() => router.back()} className="flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -149,7 +157,7 @@ export default function EditFeedBack() {
                     />
                   </svg>
                   <p className="text-medium-grey font-bold">Go back</p>
-                </div>
+                </button>
               </div>
               <div className="bg-white  flex flex-col justify-center items-start space-y-8 p-8 rounded-md w-full">
                 <div className="w-12 h-12 -mt-[52px] z-10 rounded-full -top-6  flex items-center justify-center">
@@ -185,9 +193,16 @@ export default function EditFeedBack() {
                   <h2 className="text-slate-blue font-bold text-sm">Feedback Title</h2>
                   <h3 className="text-medium-grey text-sm">Add a short, descriptive headline</h3>
                   <Field
+                    required
                     name="title"
-                    className="bg-very-light-blue w-full h-[3rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className={clsx(
+                      "bg-very-light-blue w-full h-[3rem] mt-3 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-indigo-600",
+                      touched.title && errors.title ? "border border-red-500 animate-pulse" : ""
+                    )}
                   />
+                  {touched.title && errors.title ? (
+                    <div className="text-xs text-red-500 animate-pulse">{errors.title}</div>
+                  ) : null}
                 </div>
                 <div className="w-full ">
                   <h2 className="text-slate-blue font-bold text-sm">Category</h2>

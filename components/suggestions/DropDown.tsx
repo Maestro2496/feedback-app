@@ -40,7 +40,7 @@ export default function UpVoteDropDown({
   return (
     <Menu as="div" className=" relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center  text-sm font-medium text-very-light-blue shadow-sm  ">
+        <Menu.Button className="inline-flex w-full justify-start text-sm font-medium text-very-light-blue">
           {selected}
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
         </Menu.Button>

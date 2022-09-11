@@ -1,15 +1,18 @@
 import clsx from "clsx";
-import {request} from "http";
+import Link from "next/link";
+import {useRouter} from "next/router";
+
 import React, {useMemo, useState} from "react";
 import {upVote} from "../../../store/features/productRequests";
 import {useAppDispatch, useAppSelector} from "../../../store/hooks";
 import {FeedBackDetails} from "../../feedbacks";
-import Tab from "./Tab";
+
 function Header() {
+  const router = useRouter();
   return (
     <div className="fixed z-20 inset-0 bg-[#373F68] h-[4.5rem]  flex items-center justify-between space-x-7 px-5">
       <div className="flex flex-col items-start justify-center space-y-2">
-        <div className="flex items-start">
+        <button onClick={() => router.back()} className="flex items-start">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -21,11 +24,13 @@ function Header() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
           <p className="text-white text-xs font-bold">Go back</p>
-        </div>
+        </button>
         <h1 className="text-white text-lg font-bold">Roadmap</h1>
       </div>
 
-      <button className="bg-simple-purple text-white py-2 px-4 rounded-md">+ Add Feedback</button>
+      <button className="bg-simple-purple hover:bg-purple-900 text-white py-2 px-4 rounded-md">
+        + Add Feedback
+      </button>
     </div>
   );
 }
@@ -76,7 +81,10 @@ function Box({
         />
         <span className="text-medium-grey first-letter:uppercase">{status}</span>
       </div>
-      <h2 className="lg:w-[17.875rem] text-slate-blue font-bold lg:text-lg text-sm">{title}</h2>
+      <Link href={`/feedback/${id}`}>
+        <a className="lg:w-[17.875rem] text-slate-blue font-bold lg:text-lg text-sm">{title}</a>
+      </Link>
+
       <h3 className="lg:w-[17.875rem] text-medium-grey mt-1 text-sm lg:text-base">{description}</h3>
       <div className=" mt-3 text-[0.825rem] inline-block items-center rounded-md bg-very-light-blue px-5 py-2 text-sm font-semibold text-simple-blue">
         {category}
@@ -137,7 +145,7 @@ const Request = ({requests}: {requests: FeedBackDetails[]}) => {
     }
   }, [category]);
   return (
-    <div className="flex flex-col space-y-2 px-10 py-4">
+    <div className="flex flex-col space-y-2 px-5 py-4">
       <h2 className="text-slate-blue font-bold text-lg first-letter:uppercase">{`${category}(${requests.length})`}</h2>
       <h3 className="text-medium-grey">{description}</h3>
       <div className="space-y-4 items-center justify-center">
@@ -164,7 +172,7 @@ export default function MobileRoadMap() {
   return (
     <div className="md:hidden ">
       <Header />
-      <div className=" z-10 w-full ">
+      <div className="relative z-10 w-full ">
         <div className="sticky top-[4.5rem]  border-b border-b-gray-300 bg-very-light-blue w-full">
           <button
             onClick={() => {

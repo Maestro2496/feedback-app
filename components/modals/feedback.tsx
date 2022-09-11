@@ -49,8 +49,7 @@ export default function SuccessFeedBack({
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur amet
-                        labore.
+                        Change successfully applied
                       </p>
                     </div>
                   </div>
@@ -64,7 +63,7 @@ export default function SuccessFeedBack({
                       setOpen(false);
                     }}
                   >
-                    Go back to dashboard
+                    Go back
                   </button>
                 </div>
               </Dialog.Panel>
