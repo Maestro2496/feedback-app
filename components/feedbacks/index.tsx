@@ -321,7 +321,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
 };
 const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: number}) => {
   return (
-    <section className="rounded-md bg-white md:px-8 py-3">
+    <div className="rounded-md bg-white md:px-8 py-3">
       <h1 className="text-slate-blue font-bold text-lg">
         {comments.length} comment
         <span className={clsx(comments.length > 1 ? "inline-block" : "hidden")}>s</span>
@@ -342,7 +342,7 @@ const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: numb
           }
         })}
       </>
-    </section>
+    </div>
   );
 };
 
@@ -360,7 +360,7 @@ export default function FeedBackDetails({feedBack}: {feedBack: FeedBackDetails})
     <>
       <div className=" hidden md:block max-w-[45.625rem]  mx-auto space-y-6 my-2 w-[100vw]  ">
         <div className="flex justify-between items-center w-full">
-          <div className="flex items-center">
+          <div role="header" className="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

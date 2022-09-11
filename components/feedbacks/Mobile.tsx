@@ -338,7 +338,7 @@ const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: numb
     );
   }, [comments]);
   return (
-    <section className="rounded-md bg-white p-4 space-y-6">
+    <div className="rounded-md bg-white p-4 space-y-6">
       <h1 className="text-slate-blue font-bold text-lg">
         {length} comment
         <span className={clsx(comments.length > 1 ? "inline-block" : "hidden")}>s</span>
@@ -359,7 +359,7 @@ const Comments = ({comments, feedBackId}: {comments: Comment[]; feedBackId: numb
           }
         })}
       </>
-    </section>
+    </div>
   );
 };
 
@@ -376,7 +376,7 @@ export default function Mobile({feedBack}: {feedBack: FeedBackDetails}) {
   return (
     <div className="md:hidden space-y-6 my-2 mx-4 ">
       <div className="flex justify-between items-center w-full">
-        <div className="flex items-center">
+        <div role='header' className="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

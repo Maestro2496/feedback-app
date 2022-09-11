@@ -27,10 +27,10 @@ const Suggestions = () => {
           setFilteredPRequest={setFilteredPRequests}
           filteredRequests={filteredPRequests}
         />
-        <section className="hidden lg:w-[16rem]  lg:h-full md:grid grid-cols-3 gap-x-2  lg:flex lg:flex-col lg:space-y-4">
+        <div className="hidden lg:w-[16rem]  lg:h-full md:grid grid-cols-3 gap-x-2  lg:flex lg:flex-col lg:space-y-4">
           <Cards setFilteredPRequest={setFilteredPRequests} filteredRequests={filteredPRequests} />
-        </section>
-        <section className="  lg:w-[51.5625rem] h-full flex flex-col space-y-3 ">
+        </div>
+        <div className="  lg:w-[51.5625rem] h-full flex flex-col space-y-3 ">
           <SuggestionHeader setFilteredPRequests={setFilteredPRequests} />
           {filteredPRequests.length === 0 && <SuggestionEmpty />}
           <div className="h-full flex flex-col space-y-3 mx-6 md:mx-0 pb-2">
@@ -38,7 +38,7 @@ const Suggestions = () => {
               <Suggestion key={suggestion.id} {...suggestion} />
             ))}
           </div>
-        </section>
+        </div>
       </div>
     );
   return null;
