@@ -10,7 +10,7 @@ import {FeedBackDetails} from "../../feedbacks";
 function Header() {
   const router = useRouter();
   return (
-    <div className="fixed z-20 inset-0 bg-[#373F68] h-[4.5rem]  flex items-center justify-between space-x-7 px-5">
+    <div className="fixed z-50 inset-0 bg-[#373F68] h-[4.5rem]  flex items-center justify-between space-x-7 px-5">
       <div className="flex flex-col items-start justify-center space-y-2">
         <button onClick={() => router.back()} className="flex items-start">
           <svg
@@ -27,10 +27,11 @@ function Header() {
         </button>
         <h1 className="text-white text-lg font-bold">Roadmap</h1>
       </div>
-
-      <button className="bg-simple-purple hover:bg-purple-900 text-white py-2 px-4 rounded-md">
-        + Add Feedback
-      </button>
+      <Link href={`/newFeedback`}>
+        <a className="bg-simple-purple hover:bg-purple-900 text-white py-2 px-4 rounded-md">
+          + Add Feedback
+        </a>
+      </Link>
     </div>
   );
 }
