@@ -54,6 +54,7 @@ const Reply = ({
         <div className="relative w-8 h-8">
           <Image src={reply.user.image} layout="fill" alt="" className="rounded-full " />
         </div>
+       
       </div>
       <div className="flex flex-col space-y-4 justify-center items-center w-[95%]">
         <div className="flex justify-between items-center w-full">
@@ -303,7 +304,7 @@ const CommentWithReply = ({comment, feedBackId}: {comment: Comment; feedBackId: 
             ref={(e) => {
               if (e) setHeight(e.getBoundingClientRect().height);
             }}
-            className="md:w-[100%] "
+            className="w-[100%] "
           >
             {comment.replies.map((reply) => (
               <Reply
