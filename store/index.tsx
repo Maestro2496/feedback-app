@@ -5,6 +5,10 @@ import {persistReducer} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import productRequestsReducer from "./features/productRequests";
 import sideBarReducer from "./features/sidebar";
+import upVotesReducer from "./features/upVote";
+import categoryReducer from "./features/category";
+import filterReducer from "./features/filter";
+
 const persistConfig = {
   key: "root",
   storage,
@@ -12,6 +16,9 @@ const persistConfig = {
 const rootReducer = combineReducers({
   productRequests: productRequestsReducer,
   sideBar: sideBarReducer,
+  upVotes: upVotesReducer,
+  category: categoryReducer,
+  filter: filterReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -5,38 +5,16 @@ import {ChevronDownIcon} from "@heroicons/react/20/solid";
 import {CheckIcon} from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import {FeedBackDetails} from "../feedbacks";
+import {useAppDispatch} from "../../store/hooks";
+import {addFilter} from "../../store/features/filter";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-const votes = ["Most Upvotes", "Least Upvotes", "Most comments", "Least comments"];
-export default function UpVoteDropDown({
-  setFilteredPRequests,
-}: {
-  setFilteredPRequests: Dispatch<SetStateAction<FeedBackDetails[]>>;
-}) {
-  const [selected, setSelected] = useState(votes[0]);
-  useEffect(() => {
-    setFilteredPRequests((productRequests) => {
-      const copy = [...productRequests];
-      switch (selected) {
-        case "Most Upvotes": {
-          return copy.sort((a, b) => b.upvotes - a.upvotes);
-        }
-        case "Least Upvotes": {
-          return copy.sort((a, b) => a.upvotes - b.upvotes);
-        }
-        case "Most comments": {
-          return copy.sort((a, b) => b.comments.length - a.comments.length);
-        }
-        case "Least comments": {
-          return copy.sort((a, b) => a.comments.length - b.comments.length);
-        }
-        default: {
-          return productRequests;
-        }
-      }
-    });
-  }, [selected, setFilteredPRequests]);
+const filters = ["Most upvotes", "Least upvotes", "Most comments", "Least comments"];
+export default function UpfilterDropDown() {
+  const [selected, setSelected] = useState(filters[0]);
+  const dispatch = useAppDispatch();
+
   return (
     <Menu as="div" className=" relative inline-block text-left">
       <div>
@@ -57,18 +35,21 @@ export default function UpVoteDropDown({
       >
         <Menu.Items className="absolute top-8 md:right-0  z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="">
-            {votes.map((vote) => (
-              <Menu.Item key={vote}>
+            {filters.map((filter) => (
+              <Menu.Item key={filter}>
                 {({active}) => (
                   <button
-                    onClick={() => setSelected(vote)}
+                    onClick={() => {
+                      dispatch(addFilter(filter));
+                      setSelected(filter);
+                    }}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900 " : "text-gray-700",
                       "flex justify-between items-center px-4 py-2 text-sm w-full text-left border-b-gray-300 border-b"
                     )}
                   >
-                    <span className={clsx(active && "text-simple-purple font-bold")}>{vote}</span>
-                    {selected === vote && (
+                    <span className={clsx(active && "text-simple-purple font-bold")}>{filter}</span>
+                    {selected === filter && (
                       <CheckIcon className={clsx("w-4 h-4 stroke-simple-purple")} strokeWidth={2} />
                     )}
                   </button>

@@ -1,21 +1,36 @@
+import clsx from "clsx";
 import Link from "next/link";
-import React from "react";
-import {upVote} from "../../store/features/productRequests";
-import {useAppDispatch} from "../../store/hooks";
+import React, {useRef, useState} from "react";
+import {downVote, upVote} from "../../store/features/productRequests";
+import {addVote, deleteVote} from "../../store/features/upVote";
+import {useAppDispatch, useAppSelector} from "../../store/hooks";
 
 export default function Suggestion({title, description, upvotes, comments, category, id}) {
   const dispatch = useAppDispatch();
+  const counter = useRef(0);
   return (
     <div className="cursor-pointer  bg-white w-full flex flex-col space-y-3 md:space-y-0 md:flex-row md:space-x-10 p-4 md:p-8  h-fit rounded-md shadow-md">
       <button
         onClick={() => {
-          dispatch(
-            upVote({
-              feedBackId: id,
-            })
-          );
+          if (counter.current % 2 !== 0) {
+            dispatch(
+              downVote({
+                feedBackId: id,
+              })
+            );
+          } else {
+            dispatch(
+              upVote({
+                feedBackId: id,
+              })
+            );
+          }
+          counter.current++;
         }}
-        className="hover:bg-blue-500 hover:text-white text-slate-blue stroke-simple-blue hover:stroke-white  hidden h-1/2 rounded-md md:flex flex-col space-y-1 justify-start items-center bg-very-light-blue "
+        className={clsx(
+          "  stroke-simple-blue  hidden h-1/2 rounded-md md:flex flex-col space-y-1 justify-start items-center bg-very-light-blue ",
+          "hover:bg-blue-600 hover:text-white hover:stroke-white text-slate-blue"
+        )}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,24 +73,37 @@ export default function Suggestion({title, description, upvotes, comments, categ
       <div className="md:hidden w-full flex space-x-1 justify-between md:justify-center items-center">
         <button
           onClick={() => {
-            dispatch(
-              upVote({
-                feedBackId: id,
-              })
-            );
+            if (counter.current % 2 !== 0) {
+              dispatch(
+                downVote({
+                  feedBackId: id,
+                })
+              );
+            } else {
+              dispatch(
+                upVote({
+                  feedBackId: id,
+                })
+              );
+            }
+            counter.current++;
           }}
-          className="md:hidden px-2 py-1 rounded-md flex space-x-0.5 justify-center items-center bg-very-light-blue "
+          className={clsx(
+            "md:hidden px-2 py-1 rounded-md flex space-x-0.5 justify-center items-center ",
+
+            "hover:bg-blue-600 hover:text-white hover:stroke-white bg-very-light-blue stroke-simple-blue text-slate-blue"
+          )}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
-            className="w-3 h-3 stroke-simple-blue"
+            className="w-3 h-3 "
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
           </svg>
-          <span className="inline-flex text-slate-blue font-bold text-sm">{upvotes}</span>
+          <span className="inline-flex  font-bold text-sm">{upvotes}</span>
         </button>
         <div className="flex items-center justify-center space-x-2">
           <svg

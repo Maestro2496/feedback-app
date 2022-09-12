@@ -10,38 +10,53 @@ import MobileHeader from "./mobile/Header";
 import MobileSideBar from "./mobile/SideBar";
 
 const Suggestions = () => {
-  const [filteredPRequests, setFilteredPRequests] = useState<FeedBackDetails[]>();
+  const productRequests = useAppSelector((state) => {
+    let suggestions: FeedBackDetails[];
+    if (state.category.toLocaleLowerCase() === "all") {
+      suggestions = state.productRequests.filter((request) => request.status === "suggestion");
+    } else {
+      suggestions = state.productRequests.filter(
+        (request) =>
+          request.category.toLowerCase() === state.category.toLowerCase() &&
+          request.status === "suggestion"
+      );
+    }
+    switch (state.filter) {
+      case "Most comments":
+        return suggestions.sort((a, b) => {
+          return b.comments.length - a.comments.length;
+        });
+      case "Least comments":
+        return suggestions.sort((a, b) => {
+          return a.comments.length - b.comments.length;
+        });
+      case "Most upvotes":
+        return suggestions.sort((a, b) => b.upvotes - a.upvotes);
+      case "Least upvotes":
+        return suggestions.sort((a, b) => a.upvotes - b.upvotes);
+      default:
+        return suggestions;
+    }
+  });
 
-  const productRequests = useAppSelector((state) => state.productRequests);
-  useEffect(() => {
-    const suggestions = productRequests
-      .filter((productRequest) => productRequest.status === "suggestion")
-      .sort((a, b) => b.upvotes - a.upvotes);
-    setFilteredPRequests(suggestions);
-  }, [productRequests]);
-  if (filteredPRequests)
-    return (
-      <div className="md:w-[43.0625rem] lg:w-[68.5625rem] lg:flex  lg:space-x-10 lg:space-y-0 md:space-y-8">
-        <MobileHeader />
-        <MobileSideBar
-          setFilteredPRequest={setFilteredPRequests}
-          filteredRequests={filteredPRequests}
-        />
-        <div className="hidden lg:w-[16rem]  lg:h-full md:grid grid-cols-3 gap-x-2  lg:flex lg:flex-col lg:space-y-4">
-          <Cards setFilteredPRequest={setFilteredPRequests} filteredRequests={filteredPRequests} />
-        </div>
-        <div className="  lg:w-[51.5625rem] h-full flex flex-col space-y-3 ">
-          <SuggestionHeader setFilteredPRequests={setFilteredPRequests} />
-          {filteredPRequests.length === 0 && <SuggestionEmpty />}
-          <div className="h-full flex flex-col space-y-3 mx-6 md:mx-0 pb-2">
-            {filteredPRequests.map((suggestion) => (
-              <Suggestion key={suggestion.id} {...suggestion} />
-            ))}
-          </div>
+  return (
+    <div className="md:w-[43.0625rem] lg:w-[68.5625rem] lg:flex  lg:space-x-10 lg:space-y-0 md:space-y-8">
+      <MobileHeader />
+      <MobileSideBar filteredRequests={productRequests} />
+      <div className="hidden lg:w-[16rem]  lg:h-full md:grid grid-cols-3 gap-x-2  lg:flex lg:flex-col lg:space-y-4">
+        <Cards filteredRequests={productRequests} />
+      </div>
+      <div className="  lg:w-[51.5625rem] h-full flex flex-col space-y-3 ">
+        <SuggestionHeader filteredRequests={productRequests} />
+        {productRequests.length === 0 && <SuggestionEmpty />}
+        <div className="h-full flex flex-col space-y-3 mx-6 md:mx-0 pb-2">
+          {productRequests.map((suggestion) => (
+            <Suggestion key={suggestion.id} {...suggestion} />
+          ))}
         </div>
       </div>
-    );
-  return null;
+    </div>
+  );
 };
 
 export default Suggestions;

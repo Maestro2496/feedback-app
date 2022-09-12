@@ -7,22 +7,12 @@ import {FeedBackDetails} from "../../feedbacks";
 import {useAppDispatch, useAppSelector} from "../../../store/hooks";
 import {hideSideBar} from "../../../store/features/sidebar";
 
-export default function MobileSideBar({
-  setFilteredPRequest,
-  filteredRequests,
-}: {
-  setFilteredPRequest: Dispatch<SetStateAction<FeedBackDetails[]>>;
-  filteredRequests: FeedBackDetails[];
-}) {
+export default function MobileSideBar({filteredRequests}: {filteredRequests: FeedBackDetails[]}) {
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.sideBar.open);
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10 md:hidden"
-        onClose={() => dispatch(hideSideBar())}
-      >
+      <Dialog as="div" className="relative z-10 md:hidden" onClose={() => dispatch(hideSideBar())}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -51,10 +41,7 @@ export default function MobileSideBar({
                   <div className="flex h-full flex-col bg-very-light-blue py-6 shadow-xl">
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       <div className="space-y-4 mx-2">
-                        <Cards
-                          filteredRequests={filteredRequests}
-                          setFilteredPRequest={setFilteredPRequest}
-                        />
+                        <Cards filteredRequests={filteredRequests} />
                       </div>
                     </div>
                   </div>

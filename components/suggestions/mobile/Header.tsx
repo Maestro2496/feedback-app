@@ -3,6 +3,7 @@ import {XMarkIcon} from "@heroicons/react/24/outline";
 import React from "react";
 import {showSideBar, hideSideBar} from "../../../store/features/sidebar";
 import {useAppDispatch, useAppSelector} from "../../../store/hooks";
+import {FeedBackDetails} from "../../feedbacks";
 
 export default function MobileHeader() {
   const dispatch = useAppDispatch();

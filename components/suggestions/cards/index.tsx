@@ -1,8 +1,10 @@
-import {useAppSelector} from "../../../store/hooks";
-import {Dispatch, SetStateAction, useState} from "react";
+import {useAppDispatch, useAppSelector} from "../../../store/hooks";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {FeedBackDetails} from "../../feedbacks";
 import clsx from "clsx";
 import Link from "next/link";
+import storage from "redux-persist/lib/storage";
+import {addCurrentCategory} from "../../../store/features/category";
 const Board = () => {
   return (
     <div className="hidden bg-[url('/images/background-header.png')] bg-cover  h-[11.125rem] lg:h-[8.5625rem] px-6 pb-6 rounded-md text-white md:flex justify-start items-end">
@@ -14,15 +16,9 @@ const Board = () => {
   );
 };
 const categories = ["All", "UI", "UX", "Enhancement", "Bug", "Feature"];
-const Categories = ({
-  setFilteredPRequest,
-  filteredRequests,
-}: {
-  setFilteredPRequest: Dispatch<SetStateAction<FeedBackDetails[]>>;
-  filteredRequests: FeedBackDetails[];
-}) => {
-  const productRequests = useAppSelector((state) => state.productRequests);
-  const [current, setCurrent] = useState("All");
+const Categories = () => {
+  const currentCategory = useAppSelector((state) => state.category);
+  const dispatch = useAppDispatch();
   return (
     <div className="h-[11.125rem] w-full bg-white rounded-md  py-4 px-2 flex items-center justify-center">
       <div className="space-x-3 space-y-2 ">
@@ -30,18 +26,11 @@ const Categories = ({
           <button
             key={category}
             onClick={() => {
-              setCurrent(category);
-              setFilteredPRequest(() => {
-                const copy = [...productRequests];
-                if (category === "All") return copy.sort((a, b) => b.upvotes - a.upvotes);
-                return copy
-                  .filter((request) => request.category.toLowerCase() === category.toLowerCase())
-                  .sort((a, b) => b.upvotes - a.upvotes);
-              });
+              dispatch(addCurrentCategory(category));
             }}
             className={clsx(
               "text-xs md:text-[0.825rem] ml-3 inline-block  items-center rounded-md bg-very-light-blue px-5 py-2 font-semibold ",
-              current === category ? "bg-blue-700 text-white" : "text-simple-blue"
+              currentCategory === category ? "bg-blue-700 text-white" : "text-simple-blue"
             )}
           >
             {category}
@@ -98,17 +87,11 @@ export const RoadMap = () => {
     </div>
   );
 };
-export const Cards = ({
-  setFilteredPRequest,
-  filteredRequests,
-}: {
-  setFilteredPRequest: Dispatch<SetStateAction<FeedBackDetails[]>>;
-  filteredRequests: FeedBackDetails[];
-}) => {
+export const Cards = ({filteredRequests}: {filteredRequests: FeedBackDetails[]}) => {
   return (
     <>
       <Board />
-      <Categories setFilteredPRequest={setFilteredPRequest} filteredRequests={filteredRequests} />
+      <Categories />
       <RoadMap />
     </>
   );

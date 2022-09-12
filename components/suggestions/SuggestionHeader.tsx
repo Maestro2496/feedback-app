@@ -4,15 +4,13 @@ import React from "react";
 import {useAppSelector} from "../../store/hooks";
 import UpVoteDropDown from "./DropDown";
 import {FeedBackDetails} from "../feedbacks";
+import clsx from "clsx";
 
 export default function SuggestionHeader({
-  setFilteredPRequests,
+  filteredRequests,
 }: {
-  setFilteredPRequests: Dispatch<SetStateAction<FeedBackDetails[]>>;
+  filteredRequests: FeedBackDetails[];
 }) {
-  const suggestions = useAppSelector((state) =>
-    state.productRequests.filter((productRequest) => productRequest.status === "suggestion")
-  );
   return (
     <div className="bg-[#373F68] h-[4.5rem] md:rounded-md flex items-center justify-between  md:justify-around md:space-x-7 px-1 md:px-5 ">
       <div className="flex items-center justify-center space-x-2">
@@ -24,13 +22,13 @@ export default function SuggestionHeader({
           />
         </svg>
         <span className="hidden md:inline-flex font-bold text-white text-lg">
-          {suggestions.length} Suggestions
+          {filteredRequests.length} Suggestion
+          <span className={clsx(filteredRequests.length > 1 ? "inline-block" : "hidden")}>s</span>
         </span>
       </div>
 
       <div className="flex space-x-1 items-center text-white text-xs md:text-sm">
-        <span className="font-light">Sort by:</span>{" "}
-        <UpVoteDropDown setFilteredPRequests={setFilteredPRequests} />
+        <span className="font-light">Sort by:</span> <UpVoteDropDown />
       </div>
       <Link href="/newFeedback">
         <a className="bg-simple-purple text-sm md:text-base text-white py-2 px-4 rounded-md ">

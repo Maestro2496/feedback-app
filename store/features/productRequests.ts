@@ -107,11 +107,37 @@ const productRequestSlice = createSlice({
     },
     upVote: (productRequests, action: PayloadAction<{feedBackId: number}>) => {
       const {feedBackId} = action.payload;
-      const feedBack = productRequests.find((productRequest) => productRequest.id === feedBackId);
-      feedBack.upvotes++;
+      return productRequests.map((request) => {
+        if (request.id === feedBackId) {
+          return {
+            ...request,
+            upvotes: request.upvotes + 1,
+          };
+        }
+        return request;
+      });
+    },
+    downVote: (productRequests, action: PayloadAction<{feedBackId: number}>) => {
+      const {feedBackId} = action.payload;
+      return productRequests.map((request) => {
+        if (request.id === feedBackId) {
+          return {
+            ...request,
+            upvotes: request.upvotes - 1,
+          };
+        }
+        return request;
+      });
     },
   },
 });
-export const {addFeedBack, editFeedBack, deleteFeedBack, replyToComment, addComment, upVote} =
-  productRequestSlice.actions;
+export const {
+  addFeedBack,
+  editFeedBack,
+  deleteFeedBack,
+  replyToComment,
+  addComment,
+  upVote,
+  downVote,
+} = productRequestSlice.actions;
 export default productRequestSlice.reducer;
